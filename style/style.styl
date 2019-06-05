@@ -1,0 +1,287 @@
+// @import url('https://fonts.googleapis.com/css?family=Josefin+Sans:400,600,700');
+@import url('https://fonts.googleapis.com/css?family=Crimson+Text&display=swap');
+
+@import url("normalize.css")
+
+$blue = #004DC6
+$lighter-blue = #0053D9
+$text-blue = #001F4F
+$yellow = #F8E71C
+
+$m-screen = 40em
+$l-screen = 60em
+
+*
+  margin 0
+  padding 0
+
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}
+
+html, body
+    background-color white
+    height 100%
+    // overflow hidden
+    
+
+h1
+h2
+h3
+h4
+h5
+h6
+p
+a
+    font-family "Crimson Text", serif;
+    &::selection
+        background-color #F3F3F3
+        color $blue
+        text-decoration underline
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+
+p
+    font-size 22px;
+    font-weight regular
+    color black
+    color $text-blue
+    line-height 1.5em
+    
+
+
+.logo-mobile
+    background-image URL("../img/img-logo@2x.png")
+    grid-column 1
+    width 10vw
+    height 10vw
+    background-size 10vw 10vw
+    display: inline-block
+    @media(min-width $m-screen)
+        opacity 0 
+
+.logo-desktop
+    background-image URL("../img/img-logo@2x.png")
+    grid-column 2
+    width 84px
+    height 84px 
+    background-size 84px 84px
+    display: none
+    margin-top 24px
+    @media(min-width $m-screen)
+        display: inline-block
+
+header 
+    width 100%
+    height 136px
+    position absolute
+    z-index 1
+
+.grid
+    display grid
+    grid-template-columns repeat(8, 1fr)
+    grid-column-gap 0px
+    width 100%
+
+#background
+    position absolute
+    z-index 0
+    height 100%
+
+    .column 
+        height 100%
+        border-right 1px solid #F6F6F6
+
+    .columnlast-child
+        border none
+
+
+#content
+
+    #text-wrapper
+        z-index 1
+        grid-column 2 / span 6
+        margin-top 1em
+        @media (min-width $m-screen)
+            margin-top 14em
+        @media (min-width $m-screen)
+            grid-column 2 / span 5
+
+        @media (min-width $l-screen)
+            grid-column 2 / span 4
+
+        p
+            margin-top 1.5em
+            z-index 3
+        a   
+            color black
+            position relative
+            display inline-block
+            z-index 3
+            transition .3s all
+            
+            &:hover
+                transform translate(5px,-5px)
+
+            &::before
+                content ""
+                display block
+                position absolute
+                width 100%
+                top 55%
+                height 25%
+                background-color $yellow
+                z-index -1
+                transition: all .1s ease-out
+
+            &:hover:before
+                top -10%
+                height 110% 
+
+
+#social-links
+    position relative
+    grid-column 2 / span 6
+    @media (min-width $m-screen)
+        grid-column 2 / span 4
+    @media (min-width $l-screen)
+        grid-column 2 / span 4
+
+    z-index 1
+    margin-top 48px
+    display grid
+    grid-template-columns: repeat(8, 1fr)
+    text-align center
+
+    li
+        display inline-block
+        // margin-right 16px
+
+    a
+        position relative
+        display inline-block
+        width 48px
+        height 48px   
+        background-size 48px 96px
+        background-position 0 0
+        // transition: all .1s ease-out
+
+        &::before
+            content ""
+            position absolute
+            display block
+            width 100%
+            bottom 3%
+            height 0
+            background-color $yellow
+            z-index -1
+            transition: all .1s ease-out
+
+        &:hover
+            background-position 0px -48px
+            &:before
+                height 50%
+                bottom -10%
+
+    #icn-dribbble
+        background-image URL("../img/icn-dribbble@2x.png")
+    #icn-codepen
+        background-image URL("../img/icn-codepen@2x.png")
+    #icn-medium
+        background-image URL("../img/icn-medium@2x.png")
+    #icn-github
+        background-image URL("../img/icn-github@2x.png")
+    #icn-twitter
+        background-image URL("../img/icn-twitter@2x.png")
+    #icn-instagram
+        background-image URL("../img/icn-instagram@2x.png")
+
+    
+ 
+
+#canvas 
+    position fixed
+    top 0
+    left 0
+    z-index 0
+
+#main
+    display none
+    &.loaded
+        display block
+
+#preloader
+    width 100%
+    height 100%
+    background #fff
+    position absolute
+    z-index 100
+
+    &.loaded
+        display: none
+
+    &:before
+        content ""
+        background #d7d7d7
+        height 3px
+        width 50%
+        position absolute
+        top 50%
+        left 50%
+        transform: translateX(-50%)
+
+    &::after
+        content ""
+        background #004FC1
+        height 3px
+        width 50%
+        display block
+        position absolute
+        top 50%
+        left 50%
+        transform: translateX(-50%)
+        animation loading 2s ease-in-out forwards
+        transform-origin: 0 50%
+
+@keyframes loading
+    0%
+        transform translateX(-50%) scaleX(0) 
+    50%
+        transform translateX(-50%) scaleX(.3)
+    100%
+        transform translateX(-50%) scaleX(1)
+
+.revealer
+    position: absolute
+    top: 0
+    left: 0
+    width: 0
+    height: 100%
+    pointer-events: none
+    opacity: 1
+    // transform scaleX(0)
+
+    &#block-1
+        // background red
+        background #E3E3E3
+        z-index 1001
+    &#block-2
+        background: $blue
+        z-index 1002
+    &#block-3
+        // background green
+        background #E3E3E3
+        z-index 1001
+
+.dg     //  <-- elastic-grid.js options
+    z-index 99 !important
+    // display none
+
+
+.hover-reveal__inner
+    display block
+    width 100px
+    height 100px
+    

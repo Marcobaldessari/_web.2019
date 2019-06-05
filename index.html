@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Marco Baldessari</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="/favicons/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/favicons/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="/favicons/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="/favicons/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+</head>
+
+<body class="demo-overview loading">
+	<div id="preloader"></div>
+	<div class="revealer" id="block-1"></div>
+	<div class="revealer" id="block-2"></div>
+	<div class="revealer" id="block-3"></div>
+
+	<div id="main">
+		<!-- 
+	<div class="grid" id="background">
+		<div class="column"></div>
+		<div class="column"></div>
+		<div class="column"></div>
+		<div class="column"></div>
+		<div class="column"></div>
+		<div class="column"></div>
+		<div class="column"></div>
+		<div class="column"></div>
+	</div> -->
+
+		<header class="grid">
+			<div id= "logo" class="logo logo-desktop"></div>
+		</header>
+
+		<div class="grid" id="content">
+			<div id="text-wrapper">
+				<p>Hi! I’m Marco, a digital product designer and Javascript enthusiast. I create interfaces to help people getting their stuff done, to delight them and to serve business goals.
+				</p>
+				<p id="">I share my work on <a href="https://dribbble.com/marcobaldessari" target="_blank">Dribbble</a>,
+					play
+					on <a href="https://codepen.io/marcobaldessari" target="_blank">Codepen</a>, and write my
+					experiences on <a href="https://medium.com/@marco.baldessari" target="_blank">Medium</a>.</p>
+				<p id="" class="block-animate">At Armut and Rahat Tasın I create interfaces for conversions, user satisfaction and engagement.
+				</p>
+				<!-- <p>I love grid. I love shacking 'em</p> -->
+				<!-- <p>My approach to design stands in the crossroad of extensive experience, data analysis, functional aesthetics and design thinking. </p> -->
+			</div>
+		</div>
+		<div class="grid">
+			<ul id="social-links">
+				<li class="logo logo-mobile logo-interactive"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li id="social-dribbble"><a id="icn-dribbble" href="https://dribbble.com/marcobaldessari"target="_blank"></a></li>
+				<li id="social-medium"><a id="icn-medium" href="https://medium.com/@marco.baldessari"target="_blank"></a></li>
+				<li id="social-codepen"><a id="icn-codepen" href="https://codepen.io/marcobaldessari"target="_blank"></a></li>
+				<li id="social-github"><a id="icn-github" href="https://github.com/Marcobaldessari" target="_blank"></a></li>
+				<!--<li id="social-twitter"><a id="icn-twitter" href="https://twitter.com/MarcoBaldessari"target="_blank"></a></li>-->
+				<!-- <li id="social-instagram"><a id="icn-instagram" href="https://www.instagram.com/marcobaldessari"target="_blank"></a></li> -->
+			</ul>
+		</div>
+
+
+		<!-- <div class="grid">
+		<a id="cta-hi" href="mailto:marco.baldes@gmail.com?subject=Hi buddy" target="_blank">Say hi!</a>
+	</div> -->
+
+	</div>
+	<!-- <script src="js/hidpi-canvas.min.js"></script> -->
+	<!-- <script src="js/glitch.js"></script> -->
+	<canvas id="canvas"></canvas>
+	<script src="js/bundle-min.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-30988885-11"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-30988885-11');
+	</script>
+
+	<!-- Fullstory -->
+	<script>
+		window['_fs_debug'] = false;
+		window['_fs_host'] = 'fullstory.com';
+		window['_fs_org'] = 'GR09Q';
+		window['_fs_namespace'] = 'FS';
+		(function (m, n, e, t, l, o, g, y) {
+			if (e in m) { if (m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].'); } return; }
+			g = m[e] = function (a, b, s) { g.q ? g.q.push([a, b, s]) : g._api(a, b, s); }; g.q = [];
+			o = n.createElement(t); o.async = 1; o.src = 'https://' + _fs_host + '/s/fs.js';
+			y = n.getElementsByTagName(t)[0]; y.parentNode.insertBefore(o, y);
+			g.identify = function (i, v, s) { g(l, { uid: i }, s); if (v) g(l, v, s) }; g.setUserVars = function (v, s) { g(l, v, s) }; g.event = function (i, v, s) { g('event', { n: i, p: v }, s) };
+			g.shutdown = function () { g("rec", !1) }; g.restart = function () { g("rec", !0) };
+			g.consent = function (a) { g("consent", !arguments.length || a) };
+			g.identifyAccount = function (i, v) { o = 'account'; v = v || {}; v.acctId = i; g(o, v) };
+			g.clearUserCookie = function () { };
+		})(window, document, window['_fs_namespace'], 'script', 'user');
+	</script>
+
+</body>
+
+</html>
