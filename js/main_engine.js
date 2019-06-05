@@ -1,13 +1,11 @@
 
 
-
 var fidgetList
 
 
 
-window.addEventListener('load', engine.start, false);
 
-engine(){
+function engine(){
     fidgetList = [
         aitch_grid,
         elastic_grid
@@ -17,6 +15,7 @@ engine(){
 engine.start = function(){
     console.log("=== Engine running ===");
     var logo = document.getElementById()("logo");
+    
 }
 
 engine.reset = function () {
@@ -35,6 +34,7 @@ function elastic_grid(){
     console.log("ELASTIC");
 }
 
+window.addEventListener('load', engine.start, false);
 
 
 logo.onclick = function() {
