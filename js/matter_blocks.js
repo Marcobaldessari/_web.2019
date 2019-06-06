@@ -1,8 +1,8 @@
 // Insipred from https://codepen.io/ggorlen/pen/LOwrxX?editors=1111 
 
 
-(function blocks() {
-    "use strict";
+function blocks() {
+    // "use strict";
 
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
 
@@ -38,15 +38,22 @@
     );
     World.add(engine.world, mouseConstraint);
 
+    
+
     // Create body arrays
     const boxes = [];
     const ledges = [
         Bodies.rectangle(
-            canvas.width / 2, canvas.height,
-            canvas.width, 50,
+            canvas.width / 2, canvas.height + 25,    // position
+            canvas.width, 50,                   // size
             { isStatic: true }
         ),
     ];
+
+    const boxGenerator = {
+        x: (canvas.width / 12) * 7,
+        y: -130
+    }
 
     // Add bodies to the world
     World.add(engine.world, ledges);
@@ -81,7 +88,7 @@
 
         if (boxes.length < 30 || Math.random() < 0.0001) {
             boxes.unshift(Bodies.rectangle(
-                200, -130, Math.random() * 50 + 5,
+                boxGenerator.x, boxGenerator.y, Math.random() * 50 + 5,
                 Math.random() * 50 + 5,
                 { frictionAir: 0.01, friction: 0.1, restitution: 0.6 }
             ));
@@ -130,4 +137,12 @@
             paz = az;
         }
     }
-})();
+
+    var stop = function() {
+        Matter.Render.stop(this.debugRender); // this only stop renderer but not destroy canvas
+        Matter.World.clear(this.engine.world);
+        Matter.Engine.clear(this.engine);
+        console.log("I STOPPED")
+    }
+
+};

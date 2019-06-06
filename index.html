@@ -26,37 +26,29 @@
 </head>
 
 <body class="demo-overview loading">
-	<div id="preloader"></div>
+	<!-- <div id="preloader"></div> -->
 	<div class="revealer" id="block-1"></div>
 	<div class="revealer" id="block-2"></div>
 	<div class="revealer" id="block-3"></div>
 
 	<div id="main">
-		<!-- 
-	<div class="grid" id="background">
-		<div class="column"></div>
-		<div class="column"></div>
-		<div class="column"></div>
-		<div class="column"></div>
-		<div class="column"></div>
-		<div class="column"></div>
-		<div class="column"></div>
-		<div class="column"></div>
-	</div> -->
-
 		<header class="grid">
-			<div id= "logo" class="logo logo-desktop"></div>
+			<div class="logo logo-desktop"></div>
 		</header>
 
 		<div class="grid" id="content">
 			<div id="text-wrapper">
-				<p>Hi! I’m Marco, a digital product designer and Javascript enthusiast. I create interfaces to help people getting their stuff done, to delight them and to serve business goals.
+				<!-- <p>Hi! I’m Marco, a digital product designer and Javascript enthusiast. I create interfaces to drive conversions and engagement, trying to bridge the gap between user experience and business needs.
+							</p> -->
+				<p>Hi! I’m Marco, a digital product designer and Javascript enthusiast. I create interfaces to help
+					people getting their stuff done, to delight them and to serve business goals.
 				</p>
 				<p id="">I share my work on <a href="https://dribbble.com/marcobaldessari" target="_blank">Dribbble</a>,
 					play
 					on <a href="https://codepen.io/marcobaldessari" target="_blank">Codepen</a>, and write my
 					experiences on <a href="https://medium.com/@marco.baldessari" target="_blank">Medium</a>.</p>
-				<p id="" class="block-animate">At Armut and Rahat Tasın I create interfaces for conversions, user satisfaction and engagement.
+				<p id="" class="block-animate">At Armut and Rahat Tasın I create interfaces for conversions, user
+					satisfaction and engagement.
 				</p>
 				<!-- <p>I love grid. I love shacking 'em</p> -->
 				<!-- <p>My approach to design stands in the crossroad of extensive experience, data analysis, functional aesthetics and design thinking. </p> -->
@@ -64,58 +56,25 @@
 		</div>
 		<div class="grid">
 			<ul id="social-links">
-				<li class="logo logo-mobile logo-interactive"></li>
+				<li class="logo logo-mobile"></li>
 				<li></li>
 				<li></li>
 				<li></li>
-				<li id="social-dribbble"><a id="icn-dribbble" href="https://dribbble.com/marcobaldessari"target="_blank"></a></li>
-				<li id="social-medium"><a id="icn-medium" href="https://medium.com/@marco.baldessari"target="_blank"></a></li>
-				<li id="social-codepen"><a id="icn-codepen" href="https://codepen.io/marcobaldessari"target="_blank"></a></li>
-				<li id="social-github"><a id="icn-github" href="https://github.com/Marcobaldessari" target="_blank"></a></li>
-				<!--<li id="social-twitter"><a id="icn-twitter" href="https://twitter.com/MarcoBaldessari"target="_blank"></a></li>-->
-				<!-- <li id="social-instagram"><a id="icn-instagram" href="https://www.instagram.com/marcobaldessari"target="_blank"></a></li> -->
+				<li></li>
+				<li id="social-dribbble"><a id="icn-dribbble" href="https://dribbble.com/marcobaldessari"
+						target="_blank"></a></li>
+				<li id="social-medium"><a id="icn-medium" href="https://medium.com/@marco.baldessari"
+						target="_blank"></a></li>
+				<!-- <li id="social-codepen"><a id="icn-codepen" href="https://codepen.io/marcobaldessari"target="_blank"></a></li> -->
+				<li id="social-github"><a id="icn-github" href="https://github.com/Marcobaldessari" target="_blank"></a>
+				</li>
 			</ul>
 		</div>
 
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.12.0/matter.min.js"></script>
+		<script src="js/matter_blocks.js"></script>
+		<script src="js/main_engine.js"></script>
 
-		<!-- <div class="grid">
-		<a id="cta-hi" href="mailto:marco.baldes@gmail.com?subject=Hi buddy" target="_blank">Say hi!</a>
-	</div> -->
-
-	</div>
-	<!-- <script src="js/hidpi-canvas.min.js"></script> -->
-	<!-- <script src="js/glitch.js"></script> -->
-	<canvas id="canvas"></canvas>
-	<script src="js/bundle-min.js"></script>
-
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-30988885-11"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() { dataLayer.push(arguments); }
-		gtag('js', new Date());
-
-		gtag('config', 'UA-30988885-11');
-	</script>
-
-	<!-- Fullstory -->
-	<script>
-		window['_fs_debug'] = false;
-		window['_fs_host'] = 'fullstory.com';
-		window['_fs_org'] = 'GR09Q';
-		window['_fs_namespace'] = 'FS';
-		(function (m, n, e, t, l, o, g, y) {
-			if (e in m) { if (m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].'); } return; }
-			g = m[e] = function (a, b, s) { g.q ? g.q.push([a, b, s]) : g._api(a, b, s); }; g.q = [];
-			o = n.createElement(t); o.async = 1; o.src = 'https://' + _fs_host + '/s/fs.js';
-			y = n.getElementsByTagName(t)[0]; y.parentNode.insertBefore(o, y);
-			g.identify = function (i, v, s) { g(l, { uid: i }, s); if (v) g(l, v, s) }; g.setUserVars = function (v, s) { g(l, v, s) }; g.event = function (i, v, s) { g('event', { n: i, p: v }, s) };
-			g.shutdown = function () { g("rec", !1) }; g.restart = function () { g("rec", !0) };
-			g.consent = function (a) { g("consent", !arguments.length || a) };
-			g.identifyAccount = function (i, v) { o = 'account'; v = v || {}; v.acctId = i; g(o, v) };
-			g.clearUserCookie = function () { };
-		})(window, document, window['_fs_namespace'], 'script', 'user');
-	</script>
 
 </body>
 
