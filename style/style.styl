@@ -52,26 +52,6 @@ p
     
 
 
-.logo-mobile
-    background-image URL("../img/img-logo@2x.png")
-    grid-column 1
-    width 10vw
-    height 10vw
-    background-size 10vw 10vw
-    display: inline-block
-    @media(min-width $m-screen)
-        opacity 0 
-
-.logo-desktop
-    background-image URL("../img/img-logo@2x.png")
-    grid-column 2
-    width 84px
-    height 84px 
-    background-size 84px 84px
-    display: none
-    margin-top 24px
-    @media(min-width $m-screen)
-        display: inline-block
 
 header 
     width 100%
@@ -140,14 +120,36 @@ header
             height 110% 
 
 
-#social-links
+.logo-mobile
+    background-image URL("../img/img-logo@2x.png")
+    grid-column 1
+    display: inline-block
+    width 48px
+    height 48px   
+    background-size 48px 48px
+    grid-column 2
+    @media(min-width $m-screen)
+        opacity 0 
+
+.logo-desktop
+    background-image URL("../img/img-logo@2x.png")
+    grid-column 2
+    width 84px
+    height 84px 
+    background-size 84px 84px
+    display: none
+    margin-top 24px
+    @media(min-width $m-screen)
+        display: inline-block
+
+#bottom-icons
+ 
     position relative
     grid-column 2 / span 6
     @media (min-width $m-screen)
         grid-column 2 / span 4
     @media (min-width $l-screen)
         grid-column 2 / span 4
-
     z-index 1
     margin-top 48px
     display grid
@@ -155,6 +157,7 @@ header
     text-align center
 
     li
+        text-align right
         display inline-block
         // margin-right 16px
 

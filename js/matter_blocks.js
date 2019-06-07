@@ -2,10 +2,10 @@
 
 
 function Blocks() {
-    // "use strict";
+    "use strict";
 
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
-    var boxGenerator, ledges, solidIcons;
+    var boxGenerator, ledges, solidIcons, icons;
 
 
     this.running = true;
@@ -37,60 +37,67 @@ function Blocks() {
     );
     World.add(engine.world, mouseConstraint);
 
+    // define where is the generator, where are the ledges and the solid icons
+    function createPlayground() {
+        boxGenerator = {
+            x: (canvas.width / 12) * 7,
+            y: -130,
+            boxAmount: canvas.width / 15
+        }
 
-    
-    boxGenerator = {
-        x: (canvas.width / 12) * 7,
-        y: -130,
-        boxAmount: canvas.width / 15
+        ledges = [
+            Bodies.rectangle(
+                canvas.width / 2, canvas.height + 25,    // position
+                canvas.width, 50,                   // size
+                { isStatic: true }
+            ),
+        ]
+        World.add(engine.world, ledges);
+
+        // Add static solid where Social-Icons are
+        solidIcons = document.getElementsByClassName("solid-icon");
+        // for (let i = 0; i < solidIcons.length; i++) {
+        //     solidIcons[i].getBoundingClientRect()
+        // }
+        icons = [
+
+            // Logo
+            Bodies.circle(
+                solidIcons[0].getBoundingClientRect().x + solidIcons[0].getBoundingClientRect().width / 2,      // posX
+                solidIcons[0].getBoundingClientRect().y + solidIcons[0].getBoundingClientRect().height / 2,     // posY
+                24,
+                { isStatic: true }
+            ),
+
+            // Icon Dribbble
+            Bodies.circle(
+                solidIcons[1].getBoundingClientRect().x + solidIcons[1].getBoundingClientRect().width / 2,      // posX
+                solidIcons[1].getBoundingClientRect().y + solidIcons[1].getBoundingClientRect().height / 2,     // posY
+                15,
+                { isStatic: true }
+            ),
+
+            // Icon Medium
+            Bodies.rectangle(
+                solidIcons[2].getBoundingClientRect().x + solidIcons[2].getBoundingClientRect().width / 2,      // posX
+                solidIcons[2].getBoundingClientRect().y + solidIcons[2].getBoundingClientRect().height / 2,     // posY
+                33, 33,
+                { isStatic: true }
+            ),
+
+            // // Icon Github
+            Bodies.circle(
+                solidIcons[3].getBoundingClientRect().x + solidIcons[3].getBoundingClientRect().width / 2,      // posX
+                solidIcons[3].getBoundingClientRect().y + solidIcons[3].getBoundingClientRect().height / 2,     // posY
+                16,
+                { isStatic: true }
+            )
+        ]
+        World.add(engine.world, icons);
     }
+    createPlayground();
 
-    ledges = [
-        Bodies.rectangle(
-            canvas.width / 2, canvas.height + 25,    // position
-            canvas.width, 50,                   // size
-            { isStatic: true }
-        ),
-    ]
-    World.add(engine.world, ledges);
-
-
-
-
-
-    // Add static solid where Social-Icons are
-    solidIcons = document.getElementsByClassName("solid-icon");
-    // for (let i = 0; i < solidIcons.length; i++) {
-    //     solidIcons[i].getBoundingClientRect()
-    // }
-    icons = [
-
-        // Icon Dribbble
-        Bodies.circle(
-            solidIcons[0].getBoundingClientRect().x + solidIcons[0].getBoundingClientRect().width / 2,      // posX
-            solidIcons[0].getBoundingClientRect().y + solidIcons[0].getBoundingClientRect().height / 2,     // posY
-            15,
-            { isStatic: true }
-        ),
-
-        // Icon Medium
-        Bodies.rectangle(
-            solidIcons[1].getBoundingClientRect().x + solidIcons[1].getBoundingClientRect().width / 2,      // posX
-            solidIcons[1].getBoundingClientRect().y + solidIcons[1].getBoundingClientRect().height / 2,     // posY
-            33, 33,
-            { isStatic: true }
-        ),
-
-        // // Icon Github
-        Bodies.circle(
-            solidIcons[2].getBoundingClientRect().x + solidIcons[2].getBoundingClientRect().width / 2,      // posX
-            solidIcons[2].getBoundingClientRect().y + solidIcons[2].getBoundingClientRect().height / 2,     // posY
-            16,
-            { isStatic: true }
-        )
-    ]
-    World.add(engine.world, icons);
-
+    // drawing function
     const draw = (body, ctx) => {
         ctx.fillStyle = body.color || "#111";
         ctx.beginPath();
@@ -100,6 +107,7 @@ function Blocks() {
         ctx.stroke();
     };
 
+    // trigger for boxes leaving the canvas
     const inBounds = (body, canvas) => {
         for (let i = 0; i < body.vertices.length; i++) {
             if (body.vertices[i].x < canvas.width &&
@@ -112,12 +120,15 @@ function Blocks() {
         return false;
     };
 
+    var options = { frictionAir: 0.01, friction: 0.1, restitution: 0.6 };
+
     (function update() {
         if (boxes.length < boxGenerator.boxAmount || Math.random() < 0.0001) {
             boxes.unshift(Bodies.rectangle(
-                boxGenerator.x, boxGenerator.y, Math.random() * 50 + 5,
+                boxGenerator.x, boxGenerator.y,
+                Math.random() * 40 + 5,
                 Math.random() * 50 + 5,
-                { frictionAir: 0.01, friction: 0.1, restitution: 0.6 }
+                options
             ));
 
             // boxes[0].color = "hsl(0, 0%, 100%)";
@@ -147,24 +158,12 @@ function Blocks() {
 
 
 
-    this.canvasUpdateSize = function () {
-        boxGenerator = {
-            x: (canvas.width / 12) * 7,
-            y: -130,
-            boxAmount: canvas.width / 15
-        }
-
+    function resizePlayground () {
         World.remove(engine.world, ledges);
-        ledges = [
-            Bodies.rectangle(
-                canvas.width / 2, canvas.height + 25,    // position
-                canvas.width, 50,                   // size
-                { isStatic: true }
-            ),
-        ];
-        World.add(engine.world, ledges);
+        World.remove(engine.world, icons);
+        createPlayground()
     }
-    window.addEventListener('resize', this.canvasUpdateSize, false);
+    window.addEventListener('resize', resizePlayground, false);
 
     this.stop = function () {
         console.log("I STOPPED")
