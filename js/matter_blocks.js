@@ -1,23 +1,15 @@
 // Insipred from https://codepen.io/ggorlen/pen/LOwrxX?editors=1111 
 
 
-function blocks() {
+function Blocks() {
     // "use strict";
 
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
 
-    var w, h
+    var w, h;
+    this.running = true;
     const rad = d => d * Math.PI / 180;
-    const canvas = document.createElement("canvas");
-    document.body.appendChild(canvas);
-    const ctx = canvas.getContext("2d");
-
-    (function createCanvas() {
-        w = window.innerWidth;
-        h = window.innerHeight;
-        canvas.width = w;
-        canvas.height = h;
-    })();
+    
 
     const Engine = Matter.Engine;
     const World = Matter.World;
@@ -55,6 +47,8 @@ function blocks() {
         y: -130
     }
 
+
+    
     // Add bodies to the world
     World.add(engine.world, ledges);
 
@@ -93,7 +87,9 @@ function blocks() {
                 { frictionAir: 0.01, friction: 0.1, restitution: 0.6 }
             ));
 
-            boxes[0].color = "hsl(0, 0%, " + /* ((Math.random() * 50) + 50) */ 100 + "%)";
+            // boxes[0].color = "hsl(0, 0%, 100%)";
+            boxes[0].color = "rgb(255, 255, 255)";
+            boxes[0].strokeStyle = "rgb(2, 32, 78)";
             World.add(engine.world, [boxes[0]]);
             Matter.Body.rotate(boxes[0], rad(Math.random() * 360));
         }
@@ -130,7 +126,7 @@ function blocks() {
 
             if (axdelta + aydelta + azdelta > 1) {
                 // return true;
-                alert("shaken")
+                // alert("shaken")
             }
             pax = ax;
             pay = ay;
@@ -138,11 +134,11 @@ function blocks() {
         }
     }
 
-    var stop = function() {
-        Matter.Render.stop(this.debugRender); // this only stop renderer but not destroy canvas
-        Matter.World.clear(this.engine.world);
-        Matter.Engine.clear(this.engine);
-        console.log("I STOPPED")
-    }
 
+    
+
+    this.stop = function() {
+        console.log("I STOPPED")
+        Matter.Engine.clear(this.engine);
+    }
 };

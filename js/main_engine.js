@@ -1,19 +1,30 @@
-var fidgetList
+var canvas, ctx, fidgetList, logo
 
-window.addEventListener('load', engine.start, false);
 
-function engine(){
+
+
+
+(function createCanvas() {
+    canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+    ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+})();
+
+var blocks = new Blocks();
+
+function engine() {
     fidgetList = [
         aitch_grid,
         elastic_grid
     ]
 }
 
-engine.start = function(){
+window.addEventListener('load', engine.start, false);
+engine.start = function () {
     console.log("=== Engine running ===");
-    var logo = document.getElementById()("logo");
-    game1.stop();
-    game2.start();
+    logo = document.getElementById()("logo");
 }
 
 
@@ -23,27 +34,24 @@ engine.reset = function () {
     var active_fidget = Math.floor((Math.random() * fidgetList.length));
     fidgetList[active_fidget]();
 };
-
-function aitch_grid(){
+function aitch_grid() {
     console.log("AITCH");
 }
-
-function elastic_grid(){
+function elastic_grid() {
     console.log("ELASTIC");
 }
 
 
+// window.onresize = function(event) {
+//     ctx.canvas.width = window.innerWidth;
+//     ctx.canvas.height = window.innerHeight;
+//   };
+
+
 document.addEventListener('keypress', logKey);
-
 function logKey(e) {
-  if (e.keyCode == 32) {
-      blocks.stop();
-      console.log("STOP")
-  }
+    if (e.keyCode == 32) {
+        console.log("STOP");
+        blocks.running = false
+    }
 }
-
-// logo.onclick = function() {
-//     engine.reset();
-// }
-
-blocks();
