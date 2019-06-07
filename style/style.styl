@@ -98,47 +98,46 @@ header
         border none
 
 
-#content
 
-    #text-wrapper
-        z-index 1
-        grid-column 2 / span 6
-        margin-top 1em
-        @media (min-width $m-screen)
-            margin-top 14em
-        @media (min-width $m-screen)
-            grid-column 2 / span 5
+#text-wrapper
+    z-index 1
+    grid-column 2 / span 6
+    margin-top 1em
+    @media (min-width $m-screen)
+        margin-top 14em
+    @media (min-width $m-screen)
+        grid-column 2 / span 5
 
-        @media (min-width $l-screen)
-            grid-column 2 / span 4
+    @media (min-width $l-screen)
+        grid-column 2 / span 4
 
-        p
-            margin-top 1.5em
-            z-index 3
-        a   
-            color black
-            position relative
-            display inline-block
-            z-index 3
-            transition .3s all
-            
-            &:hover
-                transform translate(5px,-5px)
+    p
+        margin-top 1.5em
+        z-index 3
+    a   
+        color black
+        position relative
+        display inline-block
+        z-index 3
+        transition .3s all
+        
+        &:hover
+            transform translate(5px,-5px)
 
-            &::before
-                content ""
-                display block
-                position absolute
-                width 100%
-                top 55%
-                height 25%
-                background-color $yellow
-                z-index -1
-                transition: all .1s ease-out
+        &::before
+            content ""
+            display block
+            position absolute
+            width 100%
+            top 55%
+            height 25%
+            background-color $yellow
+            z-index -1
+            transition: all .1s ease-out
 
-            &:hover:before
-                top -10%
-                height 110% 
+        &:hover:before
+            top -10%
+            height 110% 
 
 
 #social-links
