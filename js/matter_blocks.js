@@ -56,9 +56,7 @@ function Blocks() {
 
         // Add static solid where Social-Icons are
         solidIcons = document.getElementsByClassName("solid-icon");
-        // for (let i = 0; i < solidIcons.length; i++) {
-        //     solidIcons[i].getBoundingClientRect()
-        // }
+        console.log(solidIcons[0])
         icons = [
 
             // Logo

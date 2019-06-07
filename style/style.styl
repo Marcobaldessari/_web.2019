@@ -79,7 +79,7 @@ header
 
 
 
-#text-wrapper
+#main-wrapper
     z-index 1
     grid-column 2 / span 6
     margin-top 1em
@@ -120,16 +120,7 @@ header
             height 110% 
 
 
-.logo-mobile
-    background-image URL("../img/img-logo@2x.png")
-    grid-column 1
-    display: inline-block
-    width 48px
-    height 48px   
-    background-size 48px 48px
-    grid-column 2
-    @media(min-width $m-screen)
-        opacity 0 
+
 
 .logo-desktop
     background-image URL("../img/img-logo@2x.png")
@@ -144,6 +135,22 @@ header
 
 #bottom-icons
  
+    .logo-mobile
+        position relative
+        background-image URL("../img/img-logo@2x.png")
+        grid-column 1
+        display: inline-block
+        width 48px
+        height 48px   
+        background-size 48px 48px
+        transition .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        @media(min-width $m-screen)
+            opacity 0 
+        
+        &:hover
+            transform rotate(30deg)
+            cursor help
+
     position relative
     grid-column 2 / span 6
     @media (min-width $m-screen)
@@ -161,7 +168,7 @@ header
         display inline-block
         // margin-right 16px
 
-    a
+    a.social
         position relative
         display inline-block
         width 48px
