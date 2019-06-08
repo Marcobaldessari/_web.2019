@@ -5,7 +5,7 @@ function Blocks() {
     "use strict";
 
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
-    var boxGenerator, ledges, solidIcons, icons;
+    var boxGenerator, floor, wallRight, solidIcons, icons;
 
 
     this.running = true;
@@ -40,23 +40,33 @@ function Blocks() {
     // define where is the generator, where are the ledges and the solid icons
     function createPlayground() {
         boxGenerator = {
-            x: (canvas.width / 12) * 7,
+            x: (canvas.width / 12) * 10,
             y: -130,
             boxAmount: canvas.width / 15
         }
 
-        ledges = [
+        floor = [
             Bodies.rectangle(
                 canvas.width / 2, canvas.height + 25,    // position
                 canvas.width, 50,                   // size
                 { isStatic: true }
-            ),
+            )
         ]
-        World.add(engine.world, ledges);
+
+        wallRight = [
+            Bodies.rectangle(
+                canvas.width + 25, canvas.height / 2,
+                50, canvas.height,
+                { isStatic: true }
+            )
+        ]
+
+        World.add(engine.world, floor);
+        if (canvas.width > 960) {World.add(engine.world, wallRight)}
 
         // Add static solid where Social-Icons are
+        
         solidIcons = document.getElementsByClassName("solid-icon");
-        console.log(solidIcons[0])
         icons = [
 
             // Logo
@@ -149,15 +159,16 @@ function Blocks() {
         /*for (let i = 0; i < ledges.lenght; i++){
           draw(ledges[i],ctx);
         };*/
-        ledges.forEach(e => draw(e, ctx));
+        // ledges.forEach(e => draw(e, ctx));
         Engine.update(engine);  // instead of a single call to Engine.run(engine)
         requestAnimationFrame(update);
     })();
 
 
 
-    function resizePlayground () {
-        World.remove(engine.world, ledges);
+    function resizePlayground() {
+        World.remove(engine.world, floor);
+        World.remove(engine.world, wallRight);
         World.remove(engine.world, icons);
         createPlayground()
     }
@@ -166,7 +177,6 @@ function Blocks() {
     this.stop = function () {
         console.log("I STOPPED")
         // Matter.Engine.clear(this.engine);
-        ledges.forEach(e => console.log(e));
         // World.remove(engine.world, ledges);
 
     }

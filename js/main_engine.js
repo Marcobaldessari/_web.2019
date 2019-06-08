@@ -15,10 +15,11 @@ function canvasSetSize () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 };
+
+window.addEventListener('load', function(){blocks = new Blocks();}, false);
 window.addEventListener('resize', canvasSetSize, false);
 
 
-var blocks = new Blocks();
 
 // function engine() {
 //     fidgetList = [
