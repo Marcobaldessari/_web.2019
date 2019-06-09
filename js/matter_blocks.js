@@ -3,16 +3,12 @@
 
 function Blocks() {
     "use strict";
-
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
     var boxGenerator, floor, wallRight, solidIcons, icons;
-
 
     this.running = true;
     const rad = d => d * Math.PI / 180;
     const boxes = [];
-
-
 
     // console.log(solidIcons)
     // getBoundingClientRect
