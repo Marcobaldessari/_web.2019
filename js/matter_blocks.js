@@ -5,6 +5,9 @@ function Blocks() {
     "use strict";
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
     var boxGenerator, floor, wallRight, solidIcons, icons;
+    const mediumScreen = 640;
+    const largeScreen = 960;
+
 
     this.running = true;
     const rad = d => d * Math.PI / 180;
@@ -17,6 +20,7 @@ function Blocks() {
     const World = Matter.World;
     const Vector = Matter.Vector;
     const Bodies = Matter.Bodies;
+    const Events = Matter.Events;
     const engine = Engine.create();
 
     const MouseConstraint = Matter.MouseConstraint;
@@ -58,7 +62,7 @@ function Blocks() {
         ]
 
         World.add(engine.world, floor);
-        if (canvas.width > 960) {World.add(engine.world, wallRight)}
+        if (canvas.width > mediumScreen) {World.add(engine.world, wallRight)}
 
         // Add static solid where Social-Icons are
         
@@ -127,6 +131,8 @@ function Blocks() {
     var options = { frictionAir: 0.01, friction: 0.1, restitution: 0.6 };
 
     (function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         if (boxes.length < boxGenerator.boxAmount || Math.random() < 0.0001) {
             boxes.unshift(Bodies.rectangle(
                 boxGenerator.x, boxGenerator.y,
@@ -142,7 +148,16 @@ function Blocks() {
             Matter.Body.rotate(boxes[0], rad(Math.random() * 360));
         }
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+
+
+        // if (mouseConstraint.body) {
+        //     console.log("-> Holding..");
+        //     mouseConstraint.body.color = "rgb(60, 60, 60)";
+
+        // }
+
+
 
         for (let i = boxes.length - 1; i >= 0; i--) {
             draw(boxes[i], ctx);
@@ -152,15 +167,26 @@ function Blocks() {
                 boxes.splice(i, 1);
             }
         }
-        /*for (let i = 0; i < ledges.lenght; i++){
-          draw(ledges[i],ctx);
-        };*/
-        // ledges.forEach(e => draw(e, ctx));
+
+        
+
         Engine.update(engine);  // instead of a single call to Engine.run(engine)
         requestAnimationFrame(update);
     })();
 
 
+    Events.on(mouseConstraint, 'startdrag', function(event) {
+        // console.log('startdrag', event);
+        // make door visible
+        event.body.color = "rgb(60, 60, 60)";
+
+    });
+
+    Events.on(mouseConstraint, 'enddrag', function(event) {
+        // console.log('enddrag', event);
+        event.body.color = "rgb(255, 255, '255')";
+
+    });
 
     function resizePlayground() {
         World.remove(engine.world, floor);
