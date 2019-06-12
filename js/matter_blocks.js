@@ -4,10 +4,15 @@
 function Blocks() {
     "use strict";
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
-    var boxGenerator, floor, wallRight, solidIcons, icons;
+    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout;
     const mediumScreen = 640;
     const largeScreen = 960;
+    var counter = 1;
 
+    const blue = "#0B51C3";
+    const darkBlue = "#02204E";
+    const black = "#111";
+    const white = "#fff"
 
     this.running = true;
     const rad = d => d * Math.PI / 180;
@@ -19,9 +24,11 @@ function Blocks() {
     const Engine = Matter.Engine;
     const World = Matter.World;
     const Vector = Matter.Vector;
+    const Body = Matter.Body;
     const Bodies = Matter.Bodies;
     const Events = Matter.Events;
     const engine = Engine.create();
+    const door = document.getElementById("door");
 
     const MouseConstraint = Matter.MouseConstraint;
     const mouseConstraint = MouseConstraint.create(engine);
@@ -45,27 +52,45 @@ function Blocks() {
             boxAmount: canvas.width / 15
         }
 
-        floor = [
-            Bodies.rectangle(
-                canvas.width / 2, canvas.height + 25,    // position
-                canvas.width, 50,                   // size
-                { isStatic: true }
-            )
-        ]
+        floor = Bodies.rectangle(
+            canvas.width / 2, canvas.height + 25,    // position
+            canvas.width, 50,                   // size
+            { isStatic: true }
+        )
 
-        wallRight = [
-            Bodies.rectangle(
-                canvas.width + 25, canvas.height / 2,
-                50, canvas.height,
-                { isStatic: true }
-            )
-        ]
+        wallRight = Bodies.rectangle(
+            canvas.width + 100, 0,
+            200, canvas.height * 2,
+            { isStatic: true }
+        )
+
+        wallLeft = Bodies.rectangle(
+            -100, 0,
+            200, canvas.height * 2,
+            { isStatic: true }
+        )
+
+        target = Bodies.rectangle(
+            canvas.width/2, -40.5, canvas.width/3, 100, {  //posX, posY, width, height
+                isStatic: true,
+                color: blue,
+                strokeStyle: blue,
+                active: false,
+                move: function () {
+                    counter += 0.005;
+                    var px = canvas.width/2 + canvas.width/3 * Math.sin(counter);
+                    Body.setVelocity(target, { x: 10 , y: 0 });
+                    Body.setPosition(target, { x: px, y: target.position.y });
+                }
+            }
+        )
 
         World.add(engine.world, floor);
-        if (canvas.width > mediumScreen) {World.add(engine.world, wallRight)}
+        World.add(engine.world, wallRight);
+        World.add(engine.world, wallLeft);
 
         // Add static solid where Social-Icons are
-        
+
         solidIcons = document.getElementsByClassName("solid-icon");
         icons = [
 
@@ -106,14 +131,7 @@ function Blocks() {
     createPlayground();
 
     // drawing function
-    const draw = (body, ctx) => {
-        ctx.fillStyle = body.color || "#111";
-        ctx.beginPath();
-        body.vertices.forEach(e => ctx.lineTo(e.x, e.y));
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-    };
+
 
     // trigger for boxes leaving the canvas
     const inBounds = (body, canvas) => {
@@ -143,22 +161,27 @@ function Blocks() {
 
             // boxes[0].color = "hsl(0, 0%, 100%)";
             boxes[0].color = "rgb(255, 255, 255)";
-            boxes[0].strokeStyle = "rgb(2, 32, 78)";
+            boxes[0].strokeStyle = "#111";
             World.add(engine.world, [boxes[0]]);
             Matter.Body.rotate(boxes[0], rad(Math.random() * 360));
         }
+        if (target.active) {target.move();}
+        render();
+        Engine.update(engine);  // instead of a single call to Engine.run(engine)
+        requestAnimationFrame(update);
+    })();
 
-        
+    function draw(body, ctx) {
+        ctx.fillStyle = body.color || "#111";
+        ctx.strokeStyle = body.strokeStyle || "#111";
+        ctx.beginPath();
+        body.vertices.forEach(e => ctx.lineTo(e.x, e.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    };
 
-
-        // if (mouseConstraint.body) {
-        //     console.log("-> Holding..");
-        //     mouseConstraint.body.color = "rgb(60, 60, 60)";
-
-        // }
-
-
-
+    function render() {
         for (let i = boxes.length - 1; i >= 0; i--) {
             draw(boxes[i], ctx);
 
@@ -167,26 +190,34 @@ function Blocks() {
                 boxes.splice(i, 1);
             }
         }
+        if (target.active) {draw(target, ctx)}
+    }
 
-        
-
-        Engine.update(engine);  // instead of a single call to Engine.run(engine)
-        requestAnimationFrame(update);
-    })();
-
-
-    Events.on(mouseConstraint, 'startdrag', function(event) {
-        // console.log('startdrag', event);
-        // make door visible
-        event.body.color = "rgb(60, 60, 60)";
-
+    Events.on(mouseConstraint, 'startdrag', function (event) {
+        event.body.color = blue;
+        event.body.strokeStyle = blue;
+        addTarget();
     });
 
-    Events.on(mouseConstraint, 'enddrag', function(event) {
-        // console.log('enddrag', event);
-        event.body.color = "rgb(255, 255, '255')";
-
+    Events.on(mouseConstraint, 'enddrag', function (event) {
+        event.body.color = white;
+        event.body.strokeStyle = black;
+        removeTarget();
     });
+
+    function addTarget(){
+        World.add(engine.world, target);
+        target.active = true;
+        clearTimeout(removeTargetTimeout);
+    }
+
+    function removeTarget(){
+        removeTargetTimeout = window.setTimeout(function () {
+            World.remove(engine.world, target);
+            target.active = false;
+            // counter = 1
+        },2000)
+    }
 
     function resizePlayground() {
         World.remove(engine.world, floor);
