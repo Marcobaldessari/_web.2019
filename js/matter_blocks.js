@@ -1,18 +1,22 @@
 // Insipred from https://codepen.io/ggorlen/pen/LOwrxX?editors=1111 
 
+// import anime from 'lib/anime.es.js';
 
 function Blocks() {
     "use strict";
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
-    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout;
+    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout, plusOneList ;
     const mediumScreen = 640;
     const largeScreen = 960;
     var counter = 1;
-
-    const blue = "#0B51C3";
-    const darkBlue = "#02204E";
+    const blue = "#004DC6";
+    const darkBlue = "#001F4F";
+    const yellow = "#F8E71C";
     const black = "#111";
     const white = "#fff"
+    plusOneList = [];
+    var ctx = canvas.getContext("2d");
+
 
     this.running = true;
     const rad = d => d * Math.PI / 180;
@@ -26,6 +30,7 @@ function Blocks() {
     const Vector = Matter.Vector;
     const Body = Matter.Body;
     const Bodies = Matter.Bodies;
+    const Detector = Matter.Detector;
     const Events = Matter.Events;
     const engine = Engine.create();
     const door = document.getElementById("door");
@@ -44,12 +49,23 @@ function Blocks() {
     );
     World.add(engine.world, mouseConstraint);
 
+
     // define where is the generator, where are the ledges and the solid icons
     function createPlayground() {
-        boxGenerator = {
-            x: (canvas.width / 12) * 10,
-            y: -130,
-            boxAmount: canvas.width / 15
+
+        if (canvas.width < mediumScreen) {
+            boxGenerator = {
+                x: (canvas.width / 12) * 4,
+                y: -130,
+                boxAmount: canvas.width / 15
+            }
+        } else {
+
+            boxGenerator = {
+                x: (canvas.width / 12) * 10,
+                y: -130,
+                boxAmount: canvas.width / 15
+            }
         }
 
         floor = Bodies.rectangle(
@@ -71,15 +87,18 @@ function Blocks() {
         )
 
         target = Bodies.rectangle(
-            canvas.width/2, -40.5, canvas.width/3, 100, {  //posX, posY, width, height
+            canvas.width / 2, -40.5, canvas.width / 3, 100, {  //posX, posY, width, height
                 isStatic: true,
+                // restitution: 300000,
+                // friction: 1,
+                // inertia: Infinity,
                 color: blue,
                 strokeStyle: blue,
                 active: false,
                 move: function () {
-                    counter += 0.005;
-                    var px = canvas.width/2 + canvas.width/3 * Math.sin(counter);
-                    Body.setVelocity(target, { x: 10 , y: 0 });
+                    counter += 0.0035;
+                    var px = canvas.width / 2 + canvas.width / 3 * Math.sin(counter);
+                    Body.setVelocity(target, { x: 10, y: 0 });
                     Body.setPosition(target, { x: px, y: target.position.y });
                 }
             }
@@ -165,7 +184,7 @@ function Blocks() {
             World.add(engine.world, [boxes[0]]);
             Matter.Body.rotate(boxes[0], rad(Math.random() * 360));
         }
-        if (target.active) {target.move();}
+        if (target.active) { target.move(); }
         render();
         Engine.update(engine);  // instead of a single call to Engine.run(engine)
         requestAnimationFrame(update);
@@ -190,13 +209,21 @@ function Blocks() {
                 boxes.splice(i, 1);
             }
         }
-        if (target.active) {draw(target, ctx)}
+        if (target.active) { draw(target, ctx) }
+
+        for(let i = 0; i < plusOneList.length; i++) {
+            plusOneList[i].draw();
+        }
+       
     }
 
     Events.on(mouseConstraint, 'startdrag', function (event) {
         event.body.color = blue;
         event.body.strokeStyle = blue;
-        addTarget();
+        clearTimeout(removeTargetTimeout);
+        if (!target.active) {
+            addTarget();
+        }
     });
 
     Events.on(mouseConstraint, 'enddrag', function (event) {
@@ -205,19 +232,56 @@ function Blocks() {
         removeTarget();
     });
 
-    function addTarget(){
+    function addTarget() {
         World.add(engine.world, target);
         target.active = true;
-        clearTimeout(removeTargetTimeout);
     }
 
-    function removeTarget(){
+    function removeTarget() {
         removeTargetTimeout = window.setTimeout(function () {
             World.remove(engine.world, target);
             target.active = false;
             // counter = 1
-        },2000)
+        }, 2000)
     }
+
+    function score(body) {
+        // console.log(target)
+
+        target.color = white;
+        target.strokeStyle = white;
+        anime({
+            targets: target,
+            color: blue,
+            duration: 500,
+            easing: 'linear',
+            // position: {
+            //     x: 200,
+            //     y: -40.5,
+            // }
+        })
+
+    if (Math.random() < 0.5) {plusOneList.push(new PlusOne(body.position.x - 75, body.position.y + 40))} else {plusOneList.push(new PlusOne(body.position.x + 75, body.position.y + 40))}
+    }
+
+    Events.on(engine, 'collisionStart', function (event) {
+        var pairs = event.pairs;
+
+
+
+        for (var i = 0; i < pairs.length; i++) {
+            if (pairs[i].bodyA === target) {
+                // console.log(Detector.collisions(pairs[i], engine) )
+
+                score(pairs[i].bodyB)
+            } else if (pairs[i].bodyB === target) {
+                // console.log(Detector.collisions(pairs[i], engine) )
+                score(pairs[i].bodyA)
+            }
+        }
+
+
+    });
 
     function resizePlayground() {
         World.remove(engine.world, floor);
@@ -233,4 +297,30 @@ function Blocks() {
         // World.remove(engine.world, ledges);
 
     }
+
+
+    const PlusOne = function(posX, posY) {
+        this.x = posX;
+        this.y = posY;
+        this.color = blue;
+        
+        this.draw = function () {
+
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.strokeStyle = this.color;
+            ctx.font = "20px Crimson Text";
+            ctx.fillText("+1", this.x, this.y);
+            ctx.restore();
+        }
+
+        anime({
+            targets: this,
+            y: this.y - 20,
+            color: "rgba(0, 77, 198, 0)",
+            duration: 1500,
+            easing: 'linear',
+        })
+    }
+
 };
