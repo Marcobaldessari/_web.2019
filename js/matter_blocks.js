@@ -261,7 +261,7 @@ function Blocks() {
             // }
         })
 
-    if (Math.random() < 0.5) {plusOneList.push(new PlusOne(body.position.x - 75, body.position.y + 40))} else {plusOneList.push(new PlusOne(body.position.x + 75, body.position.y + 40))}
+    if (Math.random() < 0.5) {plusOneList.push(new PlusOne(body.position.x - 75, 40))} else {plusOneList.push(new PlusOne(body.position.x + 75, 40))}
     }
 
     Events.on(engine, 'collisionStart', function (event) {
@@ -316,7 +316,7 @@ function Blocks() {
 
         anime({
             targets: this,
-            y: this.y - 20,
+            y: this.y - 15,
             color: "rgba(0, 77, 198, 0)",
             duration: 1500,
             easing: 'linear',
