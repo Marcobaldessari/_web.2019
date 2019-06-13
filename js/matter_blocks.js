@@ -5,7 +5,7 @@
 function Blocks() {
     "use strict";
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
-    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout, plusOneList ;
+    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout, plusOneList;
     const mediumScreen = 640;
     const largeScreen = 960;
     var counter = 1;
@@ -22,7 +22,6 @@ function Blocks() {
     const rad = d => d * Math.PI / 180;
     const boxes = [];
 
-    // console.log(solidIcons)
     // getBoundingClientRect
 
     const Engine = Matter.Engine;
@@ -52,7 +51,6 @@ function Blocks() {
 
     // define where is the generator, where are the ledges and the solid icons
     function createPlayground() {
-
         if (canvas.width < mediumScreen) {
             boxGenerator = {
                 x: (canvas.width / 12) * 4,
@@ -108,7 +106,7 @@ function Blocks() {
         World.add(engine.world, wallRight);
         World.add(engine.world, wallLeft);
 
-        // Add static solid where Social-Icons are
+        // Add static solids where Social-Icons are
 
         solidIcons = document.getElementsByClassName("solid-icon");
         icons = [
@@ -149,8 +147,6 @@ function Blocks() {
     }
     createPlayground();
 
-    // drawing function
-
 
     // trigger for boxes leaving the canvas
     const inBounds = (body, canvas) => {
@@ -165,7 +161,6 @@ function Blocks() {
         return false;
     };
 
-    var options = { frictionAir: 0.01, friction: 0.1, restitution: 0.6 };
 
     (function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -175,10 +170,13 @@ function Blocks() {
                 boxGenerator.x, boxGenerator.y,
                 Math.random() * 40 + 5,
                 Math.random() * 50 + 5,
-                options
+                {
+                    frictionAir: 0.01,
+                    friction: 0.1,
+                    restitution: 0.6
+                }
             ));
 
-            // boxes[0].color = "hsl(0, 0%, 100%)";
             boxes[0].color = "rgb(255, 255, 255)";
             boxes[0].strokeStyle = "#111";
             World.add(engine.world, [boxes[0]]);
@@ -211,10 +209,10 @@ function Blocks() {
         }
         if (target.active) { draw(target, ctx) }
 
-        for(let i = 0; i < plusOneList.length; i++) {
+        for (let i = 0; i < plusOneList.length; i++) {
             plusOneList[i].draw();
         }
-       
+
     }
 
     Events.on(mouseConstraint, 'startdrag', function (event) {
@@ -227,8 +225,13 @@ function Blocks() {
     });
 
     Events.on(mouseConstraint, 'enddrag', function (event) {
-        event.body.color = white;
-        event.body.strokeStyle = black;
+        // event.body.color = white;
+        // event.body.strokeStyle = black;
+        anime({
+            targets: event.body,
+            color: white,
+            strokeStyle: black
+        })
         removeTarget();
     });
 
@@ -261,7 +264,7 @@ function Blocks() {
             // }
         })
 
-    if (Math.random() < 0.5) {plusOneList.push(new PlusOne(body.position.x - 75, 40))} else {plusOneList.push(new PlusOne(body.position.x + 75, 40))}
+        if (Math.random() < 0.5) { plusOneList.push(new PlusOne(body.position.x - 75, 40)) } else { plusOneList.push(new PlusOne(body.position.x + 75, 40)) }
     }
 
     Events.on(engine, 'collisionStart', function (event) {
@@ -299,11 +302,11 @@ function Blocks() {
     }
 
 
-    const PlusOne = function(posX, posY) {
+    const PlusOne = function (posX, posY) {
         this.x = posX;
         this.y = posY;
         this.color = blue;
-        
+
         this.draw = function () {
 
             ctx.save();
@@ -316,10 +319,10 @@ function Blocks() {
 
         anime({
             targets: this,
-            y: this.y - 15,
+            y: this.y - 25,
             color: "rgba(0, 77, 198, 0)",
-            duration: 1500,
-            easing: 'linear',
+            duration: 2000,
+            easing: 'cubicBezier(0.165, 0.840, 0.440, 1.000)',
         })
     }
 
