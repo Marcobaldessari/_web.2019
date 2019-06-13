@@ -303,7 +303,7 @@ function Blocks() {
     Events.on(mouseConstraint, 'startdrag', function (event) {
         event.body.color = blue;
         event.body.strokeStyle = blue;
-        Matter.Body.setMass(event.body, 30);
+        // Matter.Body.setMass(event.body, 30);
 
 
         clearTimeout(removeTargetTimeout);
