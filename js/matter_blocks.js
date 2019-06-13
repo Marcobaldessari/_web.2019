@@ -3,12 +3,14 @@
 // import anime from 'lib/anime.es.js';
 
 function Blocks() {
+
     "use strict";
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
     var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout, plusOneList;
+    var targetAnimeIn, targetAnimeOut
     const mediumScreen = 640;
     const largeScreen = 960;
-    var counter = 1;
+    var counter = 0;
     const blue = "#004DC6";
     const darkBlue = "#001F4F";
     const yellow = "#F8E71C";
@@ -93,11 +95,15 @@ function Blocks() {
                 color: blue,
                 strokeStyle: blue,
                 active: false,
+                yActive: -30.5,
+                yInactive: -50,
+                posY: -50,      //need a position variable outside the matter object to manipulate it through Body.setPosition()
                 move: function () {
                     counter += 0.0035;
-                    var px = canvas.width / 2 + canvas.width / 3 * Math.sin(counter);
+                    var posX = canvas.width / 2 + canvas.width / 3 * Math.sin(counter);
                     Body.setVelocity(target, { x: 10, y: 0 });
-                    Body.setPosition(target, { x: px, y: target.position.y });
+                    Body.setPosition(target, { x: posX, y: this.posY });
+                    // console.log(target.position.y)
                 }
             }
         )
@@ -165,7 +171,7 @@ function Blocks() {
     (function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (boxes.length < boxGenerator.boxAmount || Math.random() < 0.0001) {
+        if (boxes.length < boxGenerator.boxAmount) {
             boxes.unshift(Bodies.rectangle(
                 boxGenerator.x, boxGenerator.y,
                 Math.random() * 40 + 5,
@@ -188,16 +194,6 @@ function Blocks() {
         requestAnimationFrame(update);
     })();
 
-    function draw(body, ctx) {
-        ctx.fillStyle = body.color || "#111";
-        ctx.strokeStyle = body.strokeStyle || "#111";
-        ctx.beginPath();
-        body.vertices.forEach(e => ctx.lineTo(e.x, e.y));
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-    };
-
     function render() {
         for (let i = boxes.length - 1; i >= 0; i--) {
             draw(boxes[i], ctx);
@@ -212,12 +208,104 @@ function Blocks() {
         for (let i = 0; i < plusOneList.length; i++) {
             plusOneList[i].draw();
         }
-
     }
+
+    function draw(body, ctx) {
+        ctx.fillStyle = body.color || "#111";
+        ctx.strokeStyle = body.strokeStyle || "#111";
+        ctx.beginPath();
+        body.vertices.forEach(e => ctx.lineTo(e.x, e.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    };
+
+    function addTarget() {
+        World.add(engine.world, target);
+        targetAnimeIn = anime({
+            targets: target,
+            posY: target.yActive,
+            duration: 1000,
+        })
+        
+
+        target.active = true;
+    }
+
+    function removeTarget() {
+        removeTargetTimeout = window.setTimeout(function () {
+            targetAnimeOut = anime({
+                targets: target,
+                posY: target.yInactive,
+                duration: 2000,
+                complete: function (anim) {
+                    World.remove(engine.world, target);
+                    target.active = false;
+                }
+            })
+        }, 2000)
+    }
+
+    function score(body) {
+        target.color = white;
+        target.strokeStyle = white;
+        anime({
+            targets: target,
+            color: blue,
+            duration: 500,
+            easing: 'linear',
+        })
+
+        if (Math.random() < 0.5) {          // Randomly create a +1 to either right or left of the body
+            plusOneList.push(new PlusOne(Math.max(body.position.x - 75, 10) + (Math.random() * 20) - 10, 55))      // Math.max() to make sure the +1 it's not outside the canvas boundaries
+        } else {                                                                                                //Math.random() to add a little spacial distribution
+            plusOneList.push(new PlusOne(Math.min(body.position.x + 75, canvas.width - 25) + (Math.random() * 20) - 10, 55))
+        }
+    }
+
+    Events.on(engine, 'collisionStart', function (event) {
+        var pairs = event.pairs;
+        for (var i = 0; i < pairs.length; i++) {
+            if (pairs[i].bodyA === target && pairs[i].bodyB.position.y > 0) {
+                // console.log(Detector.collisions(pairs[i], engine) )
+                score(pairs[i].bodyB)
+            } else if (pairs[i].bodyB === target && pairs[i].bodyA.position.y > 0) {
+                // console.log(Detector.collisions(pairs[i], engine) )
+                score(pairs[i].bodyA)
+            }
+        }
+    });
+
+
+    const PlusOne = function (posX, posY) {
+        this.x = posX;
+        this.y = posY;
+        this.color = blue;
+        this.draw = function () {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.strokeStyle = this.color;
+            ctx.font = "20px Crimson Text";
+            ctx.fillText("+1", this.x, this.y);
+            ctx.restore();
+        }
+
+        anime({
+            targets: this,
+            y: this.y - 25,
+            color: "rgba(0, 77, 198, 0)",
+            duration: 3000,
+            easing: 'cubicBezier(0.165, 0.840, 0.440, 1.000)',
+        })
+    }
+
 
     Events.on(mouseConstraint, 'startdrag', function (event) {
         event.body.color = blue;
         event.body.strokeStyle = blue;
+        Matter.Body.setMass(event.body, 30);
+
+
         clearTimeout(removeTargetTimeout);
         if (!target.active) {
             addTarget();
@@ -235,57 +323,6 @@ function Blocks() {
         removeTarget();
     });
 
-    function addTarget() {
-        World.add(engine.world, target);
-        target.active = true;
-    }
-
-    function removeTarget() {
-        removeTargetTimeout = window.setTimeout(function () {
-            World.remove(engine.world, target);
-            target.active = false;
-            // counter = 1
-        }, 2000)
-    }
-
-    function score(body) {
-        // console.log(target)
-
-        target.color = white;
-        target.strokeStyle = white;
-        anime({
-            targets: target,
-            color: blue,
-            duration: 500,
-            easing: 'linear',
-            // position: {
-            //     x: 200,
-            //     y: -40.5,
-            // }
-        })
-
-        if (Math.random() < 0.5) { plusOneList.push(new PlusOne(body.position.x - 75, 40)) } else { plusOneList.push(new PlusOne(body.position.x + 75, 40)) }
-    }
-
-    Events.on(engine, 'collisionStart', function (event) {
-        var pairs = event.pairs;
-
-
-
-        for (var i = 0; i < pairs.length; i++) {
-            if (pairs[i].bodyA === target) {
-                // console.log(Detector.collisions(pairs[i], engine) )
-
-                score(pairs[i].bodyB)
-            } else if (pairs[i].bodyB === target) {
-                // console.log(Detector.collisions(pairs[i], engine) )
-                score(pairs[i].bodyA)
-            }
-        }
-
-
-    });
-
     function resizePlayground() {
         World.remove(engine.world, floor);
         World.remove(engine.world, wallRight);
@@ -293,37 +330,5 @@ function Blocks() {
         createPlayground()
     }
     window.addEventListener('resize', resizePlayground, false);
-
-    this.stop = function () {
-        console.log("I STOPPED")
-        // Matter.Engine.clear(this.engine);
-        // World.remove(engine.world, ledges);
-
-    }
-
-
-    const PlusOne = function (posX, posY) {
-        this.x = posX;
-        this.y = posY;
-        this.color = blue;
-
-        this.draw = function () {
-
-            ctx.save();
-            ctx.fillStyle = this.color;
-            ctx.strokeStyle = this.color;
-            ctx.font = "20px Crimson Text";
-            ctx.fillText("+1", this.x, this.y);
-            ctx.restore();
-        }
-
-        anime({
-            targets: this,
-            y: this.y - 25,
-            color: "rgba(0, 77, 198, 0)",
-            duration: 2000,
-            easing: 'cubicBezier(0.165, 0.840, 0.440, 1.000)',
-        })
-    }
 
 };
