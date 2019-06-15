@@ -8,6 +8,10 @@ function Blocks() {
     var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
     var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout, plusOneList;
     var targetAnimeIn, targetAnimeOut
+    var changeBegan = 0;
+    var changeCompleted = 0;
+
+    var targetState = "closed"
     const mediumScreen = 640;
     const largeScreen = 960;
     var counter = 0;
@@ -32,6 +36,7 @@ function Blocks() {
     const Body = Matter.Body;
     const Bodies = Matter.Bodies;
     const Detector = Matter.Detector;
+    
     const Events = Matter.Events;
     const engine = Engine.create();
     const door = document.getElementById("door");
@@ -96,7 +101,7 @@ function Blocks() {
                 strokeStyle: blue,
                 active: false,
                 yActive: -30.5,
-                yInactive: -50,
+                yInactive: -53,
                 posY: -50,      //need a position variable outside the matter object to manipulate it through Body.setPosition()
                 move: function () {
                     counter += 0.0035;
@@ -107,6 +112,8 @@ function Blocks() {
                 }
             }
         )
+
+
 
         World.add(engine.world, floor);
         World.add(engine.world, wallRight);
@@ -188,11 +195,15 @@ function Blocks() {
             World.add(engine.world, [boxes[0]]);
             Matter.Body.rotate(boxes[0], rad(Math.random() * 360));
         }
-        if (target.active) { target.move(); }
+        // if (target.active) { target.move(); }
+
+        
+        target.move();
         render();
         Engine.update(engine);  // instead of a single call to Engine.run(engine)
         requestAnimationFrame(update);
     })();
+
 
     function render() {
         for (let i = boxes.length - 1; i >= 0; i--) {
@@ -203,7 +214,8 @@ function Blocks() {
                 boxes.splice(i, 1);
             }
         }
-        if (target.active) { draw(target, ctx) }
+        // if (target.active) { draw(target, ctx) }
+        draw(target, ctx)
 
         for (let i = 0; i < plusOneList.length; i++) {
             plusOneList[i].draw();
@@ -220,31 +232,7 @@ function Blocks() {
         ctx.stroke();
     };
 
-    function addTarget() {
-        World.add(engine.world, target);
-        targetAnimeIn = anime({
-            targets: target,
-            posY: target.yActive,
-            duration: 1000,
-        })
-        
 
-        target.active = true;
-    }
-
-    function removeTarget() {
-        removeTargetTimeout = window.setTimeout(function () {
-            targetAnimeOut = anime({
-                targets: target,
-                posY: target.yInactive,
-                duration: 2000,
-                complete: function (anim) {
-                    World.remove(engine.world, target);
-                    target.active = false;
-                }
-            })
-        }, 2000)
-    }
 
     function score(body) {
         target.color = white;
@@ -299,29 +287,48 @@ function Blocks() {
         })
     }
 
+    targetAnimeOut = anime({
+        targets: target,
+        posY: target.yInactive,
+        duration: 1000,
+    })
+    targetAnimeOut.pause()
+
 
     Events.on(mouseConstraint, 'startdrag', function (event) {
         event.body.color = blue;
-        event.body.strokeStyle = blue;
-        // Matter.Body.setMass(event.body, 30);
+        event.body.strokeStyle = blue;   // instantly change color of held block
+        // console.log(event.body)
 
+        World.add(engine.world, target);
+        targetAnimeIn = anime({
+            targets: target,
+            posY: target.yActive,
+            duration: 1000,
+        })
 
         clearTimeout(removeTargetTimeout);
-        if (!target.active) {
-            addTarget();
-        }
-    });
+        targetAnimeOut.pause()
+    })
 
     Events.on(mouseConstraint, 'enddrag', function (event) {
-        // event.body.color = white;
-        // event.body.strokeStyle = black;
-        anime({
+        anime({         // smoothly change color of held block
             targets: event.body,
             color: white,
             strokeStyle: black
         })
-        removeTarget();
-    });
+
+        removeTargetTimeout = window.setTimeout(function () {
+            targetAnimeOut = anime({
+                targets: target,
+                posY: target.yInactive,
+                duration: 1000,
+                complete: function () { World.remove(engine.world, target); }
+            })
+        }, 2000)
+    })
+
+
 
     function resizePlayground() {
         World.remove(engine.world, floor);
@@ -331,4 +338,25 @@ function Blocks() {
     }
     window.addEventListener('resize', resizePlayground, false);
 
+
+    function isEven(n) {
+        return n % 2 == 0;
+    }
+
+    function isOdd(n) {
+        return Math.abs(n % 2) == 1;
+    }
+
+    function checkTargetState() {
+        if (isEven(changeBegan) && isEven(changeCompleted)) { return "closed" }
+        if (isOdd(changeBegan) && isEven(changeCompleted)) { return "opening" }
+        if (isOdd(changeBegan) && isOdd(changeCompleted)) { return "open" }
+        if (isEven(changeBegan) && isOdd(changeCompleted)) { return "closing" }
+    }
+
+
+
+
 };
+
+
