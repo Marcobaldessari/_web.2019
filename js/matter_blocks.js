@@ -1,17 +1,9 @@
-// Insipred from https://codepen.io/ggorlen/pen/LOwrxX?editors=1111 
-
-// import anime from 'lib/anime.es.js';
-
 function Blocks() {
 
     "use strict";
-    var ax, ay, az, pax, pay, paz, axdelta, aydelta, azdelta;
-    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, addTarget, removeTarget, removeTargetTimeout, plusOneList;
+    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, removeTargetTimeout, plusOneList;
     var targetAnimeIn, targetAnimeOut
-    var changeBegan = 0;
-    var changeCompleted = 0;
 
-    var targetState = "closed"
     const mediumScreen = 640;
     const largeScreen = 960;
     var counter = 0;
@@ -24,7 +16,6 @@ function Blocks() {
     var ctx = canvas.getContext("2d");
 
 
-    this.running = true;
     const rad = d => d * Math.PI / 180;
     const boxes = [];
 
@@ -39,7 +30,6 @@ function Blocks() {
     
     const Events = Matter.Events;
     const engine = Engine.create();
-    const door = document.getElementById("door");
 
     const MouseConstraint = Matter.MouseConstraint;
     const mouseConstraint = MouseConstraint.create(engine);
@@ -309,6 +299,10 @@ function Blocks() {
 
         clearTimeout(removeTargetTimeout);
         targetAnimeOut.pause()
+
+        console.log(event);
+        event.body.isSleeping = true;
+        constraintImpulse
     })
 
     Events.on(mouseConstraint, 'enddrag', function (event) {
@@ -339,20 +333,6 @@ function Blocks() {
     window.addEventListener('resize', resizePlayground, false);
 
 
-    function isEven(n) {
-        return n % 2 == 0;
-    }
-
-    function isOdd(n) {
-        return Math.abs(n % 2) == 1;
-    }
-
-    function checkTargetState() {
-        if (isEven(changeBegan) && isEven(changeCompleted)) { return "closed" }
-        if (isOdd(changeBegan) && isEven(changeCompleted)) { return "opening" }
-        if (isOdd(changeBegan) && isOdd(changeCompleted)) { return "open" }
-        if (isEven(changeBegan) && isOdd(changeCompleted)) { return "closing" }
-    }
 
 
 
