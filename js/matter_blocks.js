@@ -239,6 +239,8 @@ function Blocks() {
         } else {                                                                                                //Math.random() to add a little spacial distribution
             plusOneList.push(new PlusOne(Math.min(body.position.x + 75, canvas.width - 25) + (Math.random() * 20) - 10, 55))
         }
+        // _trackEvent('blocks', 'target-hit')
+        ga('send', 'event', 'blocks', 'target-hit');  //google analytics tracking
     }
 
     Events.on(engine, 'collisionStart', function (event) {
@@ -302,7 +304,11 @@ function Blocks() {
 
         console.log(event);
         event.body.isSleeping = true;
-        constraintImpulse
+        // constraintImpulse
+
+        // _trackEvent('blocks', 'mouse.startdrag')
+        ga('send', 'event', 'blocks', 'mouse.startdrag');  //google analytics tracking
+
     })
 
     Events.on(mouseConstraint, 'enddrag', function (event) {
@@ -319,9 +325,11 @@ function Blocks() {
                 duration: 1000,
                 complete: function () { World.remove(engine.world, target); }
             })
-        }, 2000)
-    })
+        }, 1500)
 
+        // _trackEvent('blocks', 'mouse.enddrag')
+        ga('send', 'event', 'blocks', 'mouse.enddrag');  //google analytics tracking
+    })
 
 
     function resizePlayground() {
@@ -331,7 +339,6 @@ function Blocks() {
         createPlayground()
     }
     window.addEventListener('resize', resizePlayground, false);
-
 
 
 
