@@ -1,8 +1,25 @@
+
+//   var _gaq = _gaq || [];
+//   _gaq.push(['_setAccount', 'UA-30988885-11']);
+//   _gaq.push(['_trackPageview']);
+
+//   (function() {
+//     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+//     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+//     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+//   })();
+
+
 function Blocks() {
+
+    
 
     "use strict";
     var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, removeTargetTimeout, plusOneList;
     var targetAnimeIn, targetAnimeOut
+
+    var hasPlayed = false;
+    var dragTime;
 
     const mediumScreen = 640;
     const largeScreen = 960;
@@ -92,7 +109,7 @@ function Blocks() {
                 active: false,
                 yActive: -30.5,
                 yInactive: -53,
-                posY: -50,      //need a position variable outside the matter object to manipulate it through Body.setPosition()
+                posY: -53,      //need a position variable outside the matter object to manipulate it through Body.setPosition()
                 move: function () {
                     counter += 0.0035;
                     var posX = canvas.width / 2 + canvas.width / 3 * Math.sin(counter);
@@ -240,7 +257,11 @@ function Blocks() {
             plusOneList.push(new PlusOne(Math.min(body.position.x + 75, canvas.width - 25) + (Math.random() * 20) - 10, 55))
         }
         // _trackEvent('blocks', 'target-hit')
-        ga('send', 'event', 'blocks', 'target-hit');  //google analytics tracking
+        // ga('send', 'event', 'blocks', 'target-hit');  //google analytics tracking
+        gtag('event', 'hit', {
+            'event_category': 'interactions',
+            'event_label': 'target hit'
+          });
     }
 
     Events.on(engine, 'collisionStart', function (event) {
@@ -307,7 +328,22 @@ function Blocks() {
         // constraintImpulse
 
         // _trackEvent('blocks', 'mouse.startdrag')
-        ga('send', 'event', 'blocks', 'mouse.startdrag');  //google analytics tracking
+        // ga('send', 'event', 'blocks', 'mouse.startdrag');  //google analytics tracking
+        gtag('event', 'startdrag', {
+            'event_category': 'interactions',
+            'event_label': 'block startdrag'
+          });
+
+
+        if(!hasPlayed){
+            gtag('event', 'hasPlayed', {
+                'event_category': 'interactions',
+                'event_label': 'moved at least 1 block'
+              });
+              hasPlayed = true;
+        }
+
+        dragTime = new Date();
 
     })
 
@@ -326,9 +362,12 @@ function Blocks() {
                 complete: function () { World.remove(engine.world, target); }
             })
         }, 1500)
-
         // _trackEvent('blocks', 'mouse.enddrag')
-        ga('send', 'event', 'blocks', 'mouse.enddrag');  //google analytics tracking
+        // ga('send', 'event', 'blocks', 'mouse.enddrag');  //google analytics tracking
+        gtag('event', 'stopdrag', {
+            'event_category': 'interactions',
+            'event_label': 'block stopdrag'
+          });
     })
 
 
