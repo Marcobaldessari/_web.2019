@@ -1,25 +1,10 @@
-
-//   var _gaq = _gaq || [];
-//   _gaq.push(['_setAccount', 'UA-30988885-11']);
-//   _gaq.push(['_trackPageview']);
-
-//   (function() {
-//     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-//     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-//     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-//   })();
-
-
 function Blocks() {
-
-    
-
     "use strict";
     var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, removeTargetTimeout, plusOneList;
     var targetAnimeIn, targetAnimeOut
 
     var hasPlayed = false;
-    var dragTime;
+    var dragStart, dragTime;
 
     const mediumScreen = 640;
     const largeScreen = 960;
@@ -44,7 +29,7 @@ function Blocks() {
     const Body = Matter.Body;
     const Bodies = Matter.Bodies;
     const Detector = Matter.Detector;
-    
+
     const Events = Matter.Events;
     const engine = Engine.create();
 
@@ -204,7 +189,7 @@ function Blocks() {
         }
         // if (target.active) { target.move(); }
 
-        
+
         target.move();
         render();
         Engine.update(engine);  // instead of a single call to Engine.run(engine)
@@ -261,7 +246,7 @@ function Blocks() {
         gtag('event', 'hit', {
             'event_category': 'interactions',
             'event_label': 'target hit'
-          });
+        });
     }
 
     Events.on(engine, 'collisionStart', function (event) {
@@ -311,7 +296,17 @@ function Blocks() {
     Events.on(mouseConstraint, 'startdrag', function (event) {
         event.body.color = blue;
         event.body.strokeStyle = blue;   // instantly change color of held block
-        // console.log(event.body)
+
+        // Body.setMass(event.body,)
+        // event.body.collisionFilter = {
+        //     category: 2,
+        //     group: 0
+        // }
+        // mouseConstraint.collisionFilter = {
+        //     category: 0
+        // }
+        console.log(event.body)
+        console.log(mouseConstraint)
 
         World.add(engine.world, target);
         targetAnimeIn = anime({
@@ -323,31 +318,31 @@ function Blocks() {
         clearTimeout(removeTargetTimeout);
         targetAnimeOut.pause()
 
-        console.log(event);
-        event.body.isSleeping = true;
-        // constraintImpulse
 
-        // _trackEvent('blocks', 'mouse.startdrag')
-        // ga('send', 'event', 'blocks', 'mouse.startdrag');  //google analytics tracking
         gtag('event', 'startdrag', {
             'event_category': 'interactions',
             'event_label': 'block startdrag'
-          });
+        });
 
-
-        if(!hasPlayed){
+        if (event.body == icons[0] || event.body == icons[1] || event.body == icons[2] || event.body == icons[3] ) {
+            console.log("test")
+        } else if (!hasPlayed) {
             gtag('event', 'hasPlayed', {
                 'event_category': 'interactions',
                 'event_label': 'moved at least 1 block'
-              });
-              hasPlayed = true;
+            });
+            hasPlayed = true;
         }
 
-        dragTime = new Date();
+
+        dragStart = new Date();
+
+
 
     })
 
     Events.on(mouseConstraint, 'enddrag', function (event) {
+
         anime({         // smoothly change color of held block
             targets: event.body,
             color: white,
@@ -367,7 +362,15 @@ function Blocks() {
         gtag('event', 'stopdrag', {
             'event_category': 'interactions',
             'event_label': 'block stopdrag'
-          });
+        });
+
+        dragTime = new Date()
+        dragTime = dragTime - dragStart
+        gtag('event', 'dragTime', {
+            'event_category': 'interactions',
+            // 'event_label': 'block stopdrag',
+            'value': dragTime
+        });
     })
 
 
@@ -379,7 +382,13 @@ function Blocks() {
     }
     window.addEventListener('resize', resizePlayground, false);
 
-
+    // console.log(icons[0])
+    // icons[0].addEventListener("click", function () {
+    //     // var win = window.open("https://dribbble.com/marcobaldessari", '_blank');
+    //     // win.focus();
+    //     window.open('https://dribbble.com/marcobaldessari','self');
+    //     // console.log("dribble")
+    // });
 
 
 
