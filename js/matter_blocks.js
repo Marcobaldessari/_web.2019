@@ -1,7 +1,7 @@
 function Blocks() {
     "use strict";
     var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, removeTargetTimeout, plusOneList;
-    var targetAnimeIn, targetAnimeOut
+    var targetAnimeIn, targetAnimeOut, createPlaygroundTimeOut
 
     var hasPlayed = false;
     var dragStart, dragTime;
@@ -294,50 +294,81 @@ function Blocks() {
 
 
     Events.on(mouseConstraint, 'startdrag', function (event) {
-        event.body.color = blue;
-        event.body.strokeStyle = blue;   // instantly change color of held block
 
-        // Body.setMass(event.body,)
-        // event.body.collisionFilter = {
-        //     category: 2,
-        //     group: 0
-        // }
-        // mouseConstraint.collisionFilter = {
-        //     category: 0
-        // }
-        console.log(event.body)
-        console.log(mouseConstraint)
+        // Have to use stardrag to trigger links because on mobile there is a preventDefault
+        if (icons.includes(event.body)) {
+            switch (event.body) {
+                case icons[0]:
+                    console.log(`add block`)
+                    break
+                case icons[1]:
+                    window.open(`https://dribbble.com/marcobaldessari`, name, Specs)
+                    gtag('event', 'to Dribbble', {
+                        'event_category': 'outgoing links',
+                        'event_label': 'clicked Dribbble link'
+                    });
+                    break
+                case icons[2]:
+                    console.log("https://medium.com/@marco.baldessari")
+                    gtag('event', 'to Medium', {
+                        'event_category': 'outgoing links',
+                        'event_label': 'clicked Medium link'
+                    });
+                    break
+                case icons[3]:
+                    console.log("https://github.com/Marcobaldessari")
+                    gtag('event', 'to Github', {
+                        'event_category': 'outgoing links',
+                        'event_label': 'clicked Github link'
+                    });
+                    break
+            }
+        } else {
 
-        World.add(engine.world, target);
-        targetAnimeIn = anime({
-            targets: target,
-            posY: target.yActive,
-            duration: 1000,
-        })
+            if (!hasPlayed) {
+                gtag('event', 'hasPlayed', {
+                    'event_category': 'interactions',
+                    'event_label': 'moved at least 1 block'
+                });
+                hasPlayed = true;
+            }
 
-        clearTimeout(removeTargetTimeout);
-        targetAnimeOut.pause()
+            event.body.color = blue;
+            event.body.strokeStyle = blue;   // instantly change color of held block
+
+            // Body.setMass(event.body,)
+            // event.body.collisionFilter = {
+            //     category: 2,
+            //     group: 0
+            // }
+            // mouseConstraint.collisionFilter = {
+            //     category: 0
+            // }
+            console.log(event.body)
+            console.log(mouseConstraint)
+
+            World.add(engine.world, target);
+            targetAnimeIn = anime({
+                targets: target,
+                posY: target.yActive,
+                duration: 1000,
+            })
+
+            clearTimeout(removeTargetTimeout);
+            targetAnimeOut.pause()
 
 
-        gtag('event', 'startdrag', {
-            'event_category': 'interactions',
-            'event_label': 'block startdrag'
-        });
-
-        if (event.body == icons[0] || event.body == icons[1] || event.body == icons[2] || event.body == icons[3] ) {
-            console.log("test")
-        } else if (!hasPlayed) {
-            gtag('event', 'hasPlayed', {
+            gtag('event', 'startdrag', {
                 'event_category': 'interactions',
-                'event_label': 'moved at least 1 block'
+                'event_label': 'block startdrag'
             });
-            hasPlayed = true;
+
+
+
+
+            dragStart = new Date();
+
         }
-
-
-        dragStart = new Date();
-
-
 
     })
 
@@ -375,12 +406,24 @@ function Blocks() {
 
 
     function resizePlayground() {
-        World.remove(engine.world, floor);
-        World.remove(engine.world, wallRight);
-        World.remove(engine.world, icons);
-        createPlayground()
+        clearTimeout(createPlaygroundTimeOut);
+
+        createPlaygroundTimeOut = window.setTimeout(function () {
+            canvasSetSize()
+            World.remove(engine.world, floor);
+            World.remove(engine.world, wallRight);
+            World.remove(engine.world, icons);
+            createPlayground()
+        }, 300)
     }
     window.addEventListener('resize', resizePlayground, false);
+
+
+    function canvasSetSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+
 
     // console.log(icons[0])
     // icons[0].addEventListener("click", function () {
