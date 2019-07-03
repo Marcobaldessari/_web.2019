@@ -32,10 +32,6 @@
 	<div class="revealer" id="block-3"></div>
 
 	<div id="main">
-		<!-- <header class="grid">
-			<div class="logo logo-desktop"></div>
-		</header> -->
-
 		<div class="grid" id="content">
 			<div id="main-wrapper">
 				<!-- <p>Hi! I’m Marco, a digital product designer and Javascript enthusiast. I create interfaces to drive conversions and engagement, trying to bridge the gap between user experience and business needs.
@@ -43,10 +39,10 @@
 				<p>Hi! I’m Marco, a digital product designer with a focus on simple, efficent conversion-centered
 					interfaces. My approach is a blend of extensive experience, data analysis and functional aesthetics.
 				</p>
-				<p id="">I share my work on <a href="https://dribbble.com/marcobaldessari" target="_blank">Dribbble</a>,
+				<p id="">I share my work on <a href="https://dribbble.com/marcobaldessari" target="_blank" onclick="getOutboundLink('https://dribbble.com/marcobaldessari'); return false;"  >Dribbble</a>,
 					play
-					on <a href="https://codepen.io/marcobaldessari" target="_blank">Codepen</a>, and write my
-					experiences on <a href="https://medium.com/@marco.baldessari" target="_blank">Medium</a>.</p>
+					on <a href="https://codepen.io/marcobaldessari" target="_blank" onclick="getOutboundLink('https://codepen.io/marcobaldessari'); return false;" >Codepen</a>, and write my
+					experiences on <a href="https://medium.com/@marco.baldessari" target="_blank" onclick="getOutboundLink('https://medium.com/@marco.baldessari'); return false;">Medium</a>.</p>
 				<!-- <p id="" class="block-animate">At Armut and Rahat Tasın I create interfaces for conversions, user
 					satisfaction and engagement.
 				</p> -->
@@ -54,18 +50,18 @@
 			</div>
 
 			<ul id="bottom-icons">
-				<li class="logo logo-mobile solid-icon"> <a href="#" class=""></a></li>
+				<li id="logo" class="solid-icon"> <a href="#" class=""></a></li>
 				<li></li>
 				<li></li>
 				<li></li>
 				<li></li>
+				
 				<li id="social-dribbble"><a class="social solid-icon" id="icn-dribbble"
-						href="https://dribbble.com/marcobaldessari" target="_blank"></a></li>
+						href="https://dribbble.com/marcobaldessari" target="_blank" onclick="getOutboundLink('https://dribbble.com/marcobaldessari'); return false;"></a></li>
 				<li id="social-medium"><a class="social solid-icon" id="icn-medium"
-						href="https://medium.com/@marco.baldessari" target="_blank"></a></li>
-				<!-- <li id="social-codepen"><a id="icn-codepen" href="https://codepen.io/marcobaldessari"target="_blank"></a></li> -->
+						href="https://medium.com/@marco.baldessari" target="_blank" onclick="getOutboundLink('https://medium.com/@marco.baldessari'); return false;"></a></li>
 				<li id="social-github"><a class="social solid-icon" id="icn-github"
-						href="https://github.com/Marcobaldessari" target="_blank"></a>
+						href="https://github.com/Marcobaldessari" target="_blank" onclick="getOutboundLink('https://github.com/Marcobaldessari'); return false;""></a>
 				</li>
 			</ul>
 		</div>
@@ -84,6 +80,18 @@
 		gtag('config', 'UA-30988885-11');
 	</script>
 
+	<!-- Google Analytics outbound links-->
+
+	<script>
+		var getOutboundLink = function (url) {
+			gtag('event', 'click', {
+				'event_category': 'outbound',
+				'event_label': url,
+				'transport_type': 'beacon',
+				'event_callback': function () { document.location = url; }
+			});
+		}
+	</script>
 
 	<!-- Fullstory -->
 
@@ -118,7 +126,8 @@
 	</script>
 
 	<script src="js/anime.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.12.0/matter.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.12.0/matter.min.js"></script> -->
+	<script src="js/matter_fork.js"></script>
 	<script src="js/matter_blocks.js"></script>
 	<script src="js/main_engine.js"></script>
 

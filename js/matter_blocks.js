@@ -1,6 +1,6 @@
 function Blocks() {
     "use strict";
-    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, removeTargetTimeout, plusOneList;
+    var boxGenerator, floor, wallLeft, wallRight, target, solidIcons, icons, logo, removeTargetTimeout, plusOneList;
     var targetAnimeIn, targetAnimeOut, createPlaygroundTimeOut
 
     var hasPlayed = false;
@@ -54,14 +54,16 @@ function Blocks() {
             boxGenerator = {
                 x: (canvas.width / 12) * 4,
                 y: -130,
-                boxAmount: canvas.width / 15
+                boxCap: canvas.width / 15,
+                boxCapDefault: canvas.width / 15,
             }
         } else {
 
             boxGenerator = {
                 x: (canvas.width / 12) * 10,
                 y: -130,
-                boxAmount: canvas.width / 15
+                boxCap: canvas.width / 15,
+                boxCapDefault: canvas.width / 15
             }
         }
 
@@ -114,6 +116,8 @@ function Blocks() {
         // Add static solids where Social-Icons are
 
         solidIcons = document.getElementsByClassName("solid-icon");
+        logo = document.getElementById("logo");
+
         icons = [
 
             // Logo
@@ -121,7 +125,14 @@ function Blocks() {
                 solidIcons[0].getBoundingClientRect().x + solidIcons[0].getBoundingClientRect().width / 2,      // posX
                 solidIcons[0].getBoundingClientRect().y + solidIcons[0].getBoundingClientRect().height / 2,     // posY
                 24,
-                { isStatic: true }
+                {
+                    isStatic: true,
+                    collisionFilter: {
+                        category: 4,
+                        group: -1
+                    }
+                }
+
             ),
 
             // Icon Dribbble
@@ -149,6 +160,7 @@ function Blocks() {
             )
         ]
         World.add(engine.world, icons);
+        console.log(icons[0])
     }
     createPlayground();
 
@@ -170,7 +182,7 @@ function Blocks() {
     (function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (boxes.length < boxGenerator.boxAmount) {
+        if (boxes.length < boxGenerator.boxCap) {
             boxes.unshift(Bodies.rectangle(
                 boxGenerator.x, boxGenerator.y,
                 Math.random() * 40 + 5,
@@ -188,6 +200,14 @@ function Blocks() {
             Matter.Body.rotate(boxes[0], rad(Math.random() * 360));
         }
         // if (target.active) { target.move(); }
+
+        // console.log(mouseConstraint.mouse.position)
+        if (mouseConstraint.mouse.position.y < canvas.height / 2) {
+            // Events.trigger(mouseConstraint, 'mouseup', { mouse: mouse });
+            // console.log(mouseConstraint.events)
+
+        }
+        // Events.trigger(mouseConstraint, 'mouseup', { mouse: mouse });
 
 
         target.move();
@@ -295,80 +315,52 @@ function Blocks() {
 
     Events.on(mouseConstraint, 'startdrag', function (event) {
 
-        // Have to use stardrag to trigger links because on mobile there is a preventDefault
-        if (icons.includes(event.body)) {
-            switch (event.body) {
-                case icons[0]:
-                    console.log(`add block`)
-                    break
-                case icons[1]:
-                    window.open(`https://dribbble.com/marcobaldessari`, name, Specs)
-                    gtag('event', 'to Dribbble', {
-                        'event_category': 'outgoing links',
-                        'event_label': 'clicked Dribbble link'
-                    });
-                    break
-                case icons[2]:
-                    console.log("https://medium.com/@marco.baldessari")
-                    gtag('event', 'to Medium', {
-                        'event_category': 'outgoing links',
-                        'event_label': 'clicked Medium link'
-                    });
-                    break
-                case icons[3]:
-                    console.log("https://github.com/Marcobaldessari")
-                    gtag('event', 'to Github', {
-                        'event_category': 'outgoing links',
-                        'event_label': 'clicked Github link'
-                    });
-                    break
-            }
-        } else {
-
-            if (!hasPlayed) {
-                gtag('event', 'hasPlayed', {
-                    'event_category': 'interactions',
-                    'event_label': 'moved at least 1 block'
-                });
-                hasPlayed = true;
-            }
-
-            event.body.color = blue;
-            event.body.strokeStyle = blue;   // instantly change color of held block
-
-            // Body.setMass(event.body,)
-            // event.body.collisionFilter = {
-            //     category: 2,
-            //     group: 0
-            // }
-            // mouseConstraint.collisionFilter = {
-            //     category: 0
-            // }
-            console.log(event.body)
-            console.log(mouseConstraint)
-
-            World.add(engine.world, target);
-            targetAnimeIn = anime({
-                targets: target,
-                posY: target.yActive,
-                duration: 1000,
-            })
-
-            clearTimeout(removeTargetTimeout);
-            targetAnimeOut.pause()
-
-
-            gtag('event', 'startdrag', {
+        if (!hasPlayed) {
+            gtag('event', 'hasPlayed', {
                 'event_category': 'interactions',
-                'event_label': 'block startdrag'
+                'event_label': 'moved at least 1 block'
             });
-
-
-
-
-            dragStart = new Date();
-
+            hasPlayed = true;
         }
+
+        event.body.color = blue;
+        event.body.strokeStyle = blue;   // instantly change color of held block
+
+        // Body.setMass(event.body,)
+        // event.body.collisionFilter = {
+        //     category: 2,
+        //     group: 0
+        // }
+        // mouseConstraint.collisionFilter = {
+        //     category: 0
+        // }
+
+
+        // console.log(event.body)
+        // console.log(mouseConstraint)
+
+        World.add(engine.world, target);
+        targetAnimeIn = anime({
+            targets: target,
+            posY: target.yActive,
+            duration: 1000,
+        })
+
+        clearTimeout(removeTargetTimeout);
+        targetAnimeOut.pause()
+
+
+        gtag('event', 'startdrag', {
+            'event_category': 'interactions',
+            'event_label': 'block startdrag'
+        });
+
+
+
+
+        dragStart = new Date();
+
+
 
     })
 
@@ -423,6 +415,31 @@ function Blocks() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     };
+
+
+    logo.addEventListener("click", function () {
+        if (boxGenerator.boxCap < canvas.width / 4) {
+            boxGenerator.boxCap += 10;
+        } else {
+            boxCleaning()
+        }
+        console.log(boxGenerator.boxCap)
+        console.log(boxGenerator.boxCapDefault)
+    })
+
+    function boxCleaning() {
+        boxGenerator.boxCap = 0
+        World.remove(engine.world, floor);
+        window.setTimeout(function () {
+            World.add(engine.world, floor);
+            boxGenerator.boxCap = boxGenerator.boxCapDefault
+            // console.log(boxGenerator.boxCap)
+            // console.log(boxGenerator.boxCapDefault)
+        }, 3000)
+
+
+
+    }
 
 
     // console.log(icons[0])
