@@ -9,6 +9,7 @@ function Blocks() {
     const mediumScreen = 640;
     const largeScreen = 960;
     var counter = 0;
+
     const blue = "#004DC6";
     const darkBlue = "#001F4F";
     const yellow = "#F8E71C";
@@ -16,7 +17,8 @@ function Blocks() {
     const white = "#fff"
     plusOneList = [];
     var ctx = canvas.getContext("2d");
-
+    ctx.canvasColor = white;
+    var logoSize = 1;
 
     const rad = d => d * Math.PI / 180;
     const boxes = [];
@@ -181,6 +183,8 @@ function Blocks() {
 
     (function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.fillStyle = ctx.canvasColor;
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         if (boxes.length < boxGenerator.boxCap) {
             boxes.unshift(Bodies.rectangle(
@@ -263,10 +267,10 @@ function Blocks() {
         }
         // _trackEvent('blocks', 'target-hit')
         // ga('send', 'event', 'blocks', 'target-hit');  //google analytics tracking
-        gtag('event', 'hit', {
-            'event_category': 'interactions',
-            'event_label': 'target hit'
-        });
+        // gtag('event', 'hit', {
+        //     'event_category': 'interactions',
+        //     'event_label': 'target hit'
+        // });
     }
 
     Events.on(engine, 'collisionStart', function (event) {
@@ -316,44 +320,38 @@ function Blocks() {
     Events.on(mouseConstraint, 'startdrag', function (event) {
 
         if (!hasPlayed) {
-            gtag('event', 'hasPlayed', {
-                'event_category': 'interactions',
-                'event_label': 'moved at least 1 block'
-            });
-            hasPlayed = true;
+            // gtag('event', 'hasPlayed', {
+            //     'event_category': 'interactions',
+            //     'event_label': 'moved at least 1 block'
+            // });
+            // hasPlayed = true;
         }
 
         event.body.color = blue;
         event.body.strokeStyle = blue;   // instantly change color of held block
 
-        // Body.setMass(event.body,)
-        // event.body.collisionFilter = {
-        //     category: 2,
-        //     group: 0
-        // }
-        // mouseConstraint.collisionFilter = {
-        //     category: 0
-        // }
+
 
 
         // console.log(event.body)
         // console.log(mouseConstraint)
 
-        World.add(engine.world, target);
-        targetAnimeIn = anime({
-            targets: target,
-            posY: target.yActive,
-            duration: 1000,
-        })
+        if (event.body != icons[0]) {
+            World.add(engine.world, target);
+            targetAnimeIn = anime({
+                targets: target,
+                posY: target.yActive,
+                duration: 1000,
+            })
 
-        clearTimeout(removeTargetTimeout);
-        targetAnimeOut.pause()
+            clearTimeout(removeTargetTimeout);
+            targetAnimeOut.pause()
+        }
 
-
-        gtag('event', 'startdrag', {
-            'event_category': 'interactions',
-            'event_label': 'block startdrag'
-        });
+        // gtag('event', 'startdrag', {
+        //     'event_category': 'interactions',
+        //     'event_label': 'block startdrag'
+        // });
 
 
 
@@ -382,18 +380,18 @@ function Blocks() {
         }, 1500)
         // _trackEvent('blocks', 'mouse.enddrag')
         // ga('send', 'event', 'blocks', 'mouse.enddrag');  //google analytics tracking
-        gtag('event', 'stopdrag', {
-            'event_category': 'interactions',
-            'event_label': 'block stopdrag'
-        });
+        // gtag('event', 'stopdrag', {
+        //     'event_category': 'interactions',
+        //     'event_label': 'block stopdrag'
+        // });
 
         dragTime = new Date()
         dragTime = dragTime - dragStart
-        gtag('event', 'dragTime', {
-            'event_category': 'interactions',
-            // 'event_label': 'block stopdrag',
-            'value': dragTime
-        });
+        // gtag('event', 'dragTime', {
+        //     'event_category': 'interactions',
+        //     // 'event_label': 'block stopdrag',
+        //     'value': dragTime
+        // });
     })
 
 
@@ -420,14 +418,28 @@ function Blocks() {
     logo.addEventListener("click", function () {
         if (boxGenerator.boxCap < canvas.width / 4) {
             boxGenerator.boxCap += 10;
+            // logoSize = logoSize + 0.05;
+            // console.log(boxGenerator.boxCap)
         } else {
             boxCleaning()
+            // logoSize = 1
         }
-        console.log(boxGenerator.boxCap)
-        console.log(boxGenerator.boxCapDefault)
+        // gtag('event', 'logoClick', {
+        //     'event_category': 'interactions',
+        // });
+        // logo.style.transform = "scale(" + logoSize + ")"
+        // console.log(logoSize)
     })
 
     function boxCleaning() {
+        // ctx.canvasColor = blue;
+        // anime({
+        //     targets: ctx,
+        //     canvasColor: white,
+        //     duration: 2000,
+        //     easing: 'linear',
+        // })
+
         boxGenerator.boxCap = 0
         World.remove(engine.world, floor);
         window.setTimeout(function () {
