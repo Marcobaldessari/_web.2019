@@ -162,7 +162,7 @@ function Blocks() {
             )
         ]
         World.add(engine.world, icons);
-        console.log(icons[0])
+        // console.log(icons[0])
     }
     createPlayground();
 
