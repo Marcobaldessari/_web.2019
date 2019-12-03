@@ -146,10 +146,10 @@ function Blocks() {
             ),
 
             // // Icon Github
-            Bodies.circle(
+            Bodies.rectangle(
                 solidIcons[3].getBoundingClientRect().x + solidIcons[3].getBoundingClientRect().width / 2,      // posX
                 solidIcons[3].getBoundingClientRect().y + solidIcons[3].getBoundingClientRect().height / 2,     // posY
-                16,
+                33,33,
                 { isStatic: true }
             )
         ]
