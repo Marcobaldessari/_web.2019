@@ -121,22 +121,9 @@ header
             height 110% 
 
 
-
-
-.logo-desktop
-    background-image URL("../img/img-logo@2x.png")
-    grid-column 2
-    width 84px
-    height 84px 
-    background-size 84px 84px
-    display: none
-    margin-top 24px
-    @media(min-width $m-screen)
-        display: inline-block
-
 #bottom-icons
  
-    .logo-mobile
+    #logo
         position relative
         background-image URL("../img/img-logo@2x.png")
         grid-column 1
@@ -151,11 +138,13 @@ header
         &:hover
             transform rotate(30deg)
             cursor help
+        &:active
+            transform rotate(60deg)
 
     position relative
     grid-column 2 / span 6
     @media (min-width $m-screen)
-        grid-column 2 / span 4
+        grid-column 2 / span 5
     @media (min-width $l-screen)
         grid-column 2 / span 3
     z-index 1
