@@ -208,17 +208,6 @@ function Blocks() {
         }
         // if (target.active) { target.move(); }
 
-<<<<<<< HEAD
-=======
-        // console.log(mouseConstraint.mouse.position)
-        if (mouseConstraint.mouse.position.y < canvas.height / 2) {
-            // Events.trigger(mouseConstraint, 'mouseup', { mouse: mouse });
-            // console.log(mouseConstraint.events)
-
-        }
-        // Events.trigger(mouseConstraint, 'mouseup', { mouse: mouse });
-
->>>>>>> 9cf581de47e72611ef5b706d8cf825c8ebbfea86
 
         target.move();
         render();
