@@ -5575,7 +5575,7 @@
 
                         if (touches) {
                             mouse.button = 0;
-                            event.preventDefault();
+                            //event.preventDefault();
                         }
 
                         mouse.absolute.x = position.x;
@@ -5591,7 +5591,7 @@
 
                         if (touches) {
                             mouse.button = 0;
-                            event.preventDefault();
+                            //event.preventDefault();
                         } else {
                             mouse.button = event.button;
                         }
@@ -5610,7 +5610,7 @@
                             touches = event.changedTouches;
 
                         if (touches) {
-                            event.preventDefault();
+                            //event.preventDefault();
                         }
 
                         mouse.button = -1;
@@ -5625,7 +5625,7 @@
 
                     mouse.mousewheel = function (event) {
                         mouse.wheelDelta = Math.max(-1, Math.min(1, event.wheelDelta || -event.detail));
-                        event.preventDefault();
+                        //event.preventDefault();
                     };
 
                     Mouse.setElement(mouse, mouse.element);
